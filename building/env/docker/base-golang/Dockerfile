@@ -1,6 +1,8 @@
 # The custom basic envirnoment for golang
 FROM registry.docker-cn.com/library/ubuntu:16.04
 LABEL maintainer="MarkLux"
+# change with aliyun sources
+# ADD sources.list /etc/apt/sources.list
 # install dependencies
 RUN apt-get update&&apt-get -y install \
     gcc g++\
@@ -12,7 +14,7 @@ WORKDIR /home/go
 # install go from remote
 RUN wget https://studygolang.com/dl/golang/go1.12.linux-amd64.tar.gz && \
     tar -xvzf go1.12.linux-amd64.tar.gz -C /usr/local && \
-    rm -rf go1.12.linux-amd64.tar.gz && \
+    rm -rf go1.12.linux-amd64.tar.gz
 # set up env variables
 ENV GOROOT /usr/local/go
 ENV GOPATH /home/go
