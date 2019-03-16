@@ -1,32 +1,32 @@
 package main
 
 import (
+	"github.com/MarkLux/GOLD/serving/rpc/goldrpc"
 	"log"
+	"time"
 
 	"golang.org/x/net/context"
-	"goldrpc"
 	"google.golang.org/grpc"
-	"time"
 )
 
 const (
-	serviceName = "demoClient"
-	endpoint = "127.0.0.1"
+	serviceName  = "demoClient"
+	endpoint     = "127.0.0.1"
 	providerAddr = "localhost:8099"
 )
 
 func main() {
 	conn, err := grpc.Dial(providerAddr, grpc.WithInsecure())
 	if err != nil {
-        log.Fatal("did not connect: %v", err)
+		log.Fatal("did not connect: %v", err)
 	}
 	defer conn.Close()
-	
-	c := goldrpc.NewGoldRpcClient(conn)
+
+	c := goldrpc.NewRpcClient(conn)
 
 	data := &goldrpc.SyncData{
-		Sender: serviceName,
-		Endpoint: endpoint,
+		Sender:    serviceName,
+		Endpoint:  endpoint,
 		Timestamp: time.Now().Unix(),
 	}
 

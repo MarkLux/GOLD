@@ -6,7 +6,7 @@ option java_outer_classname = "GoldRpcProto";
 
 package goldrpc;
 
-service GoldRpc {
+service Rpc {
     rpc Call (SyncRequest) returns(SyncResponse) {}
 }
 

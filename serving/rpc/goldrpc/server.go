@@ -1,15 +1,15 @@
 package goldrpc
 
 import (
-	log "log"
-	context "context"
-	time "time"
-	net "net"
-	errors "errors"
-	grpc "google.golang.org/grpc"
+	"context"
+	"errors"
+	"google.golang.org/grpc"
+	"log"
+	"net"
+	"time"
 )
 
-type Server struct {}
+type Server struct{}
 
 // rpc implement
 // TODO mount the biz function here later
@@ -18,18 +18,18 @@ func (*Server) Call(ctx context.Context, req *SyncRequest) (*SyncResponse, error
 	// log the data
 	log.Printf("invoker: %s, endpoint: %s, timestamp: %d \n", data.Sender, data.Endpoint, data.Timestamp)
 	// return the mock response here.
-	resData := &SyncData {
-		Sender: "mocked service",
-		Endpoint: "127.0.0.1",
+	resData := &SyncData{
+		Sender:    "mocked service",
+		Endpoint:  "127.0.0.1",
 		Timestamp: time.Now().Unix(),
 	}
-	res := &SyncResponse {
+	res := &SyncResponse{
 		Data: resData,
 	}
 	return res, nil
 }
 
-// lanuch the server
+// launch the server
 func (*Server) Serve(port string) error {
 	// listen the port
 	lis, err := net.Listen("tcp", port)

@@ -1,10 +1,10 @@
 package main
 
 import (
-	goldrpc "goldrpc"
+	"github.com/MarkLux/GOLD/serving/rpc/goldrpc"
 )
 
 func main() {
-	s := goldrpc.Server()
+	s := &goldrpc.Server{}
 	s.Serve(":8099")
 }
