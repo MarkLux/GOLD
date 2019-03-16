@@ -2,12 +2,11 @@ package main
 
 import (
 	"log"
-    "os"
-  
-    "golang.org/x/net/context"
+
+	"golang.org/x/net/context"
+	"goldrpc"
 	"google.golang.org/grpc"
 	"time"
-	"goldrpc"
 )
 
 const (
@@ -17,7 +16,7 @@ const (
 )
 
 func main() {
-	conn, err := grpc.Dail(providerAddr, grpc.WithInsecure())
+	conn, err := grpc.Dial(providerAddr, grpc.WithInsecure())
 	if err != nil {
         log.Fatal("did not connect: %v", err)
 	}
@@ -28,11 +27,11 @@ func main() {
 	data := &goldrpc.SyncData{
 		Sender: serviceName,
 		Endpoint: endpoint,
-		Timestamp: time.Now().Unix()
+		Timestamp: time.Now().Unix(),
 	}
 
 	req := &goldrpc.SyncRequest{
-		Data: data
+		Data: data,
 	}
 
 	res, err := c.Call(context.Background(), req)
