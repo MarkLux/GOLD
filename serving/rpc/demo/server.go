@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/MarkLux/GOLD/serving/rpc/goldrpc"
-	"github.com/MarkLux/GOLD/serving/wrapper/constant"
 	"log"
 )
 
@@ -22,7 +21,7 @@ func (*bizFunc) Handle(request *goldrpc.GoldRequest, response *goldrpc.GoldRespo
 
 func main() {
 	server := &goldrpc.GoldRpcServer{
-		BindPort: constant.DefaultServicePort,
+		BindPort: ":8080",
 		ServiceName: "helloService",
 		BizHandler: &bizFunc{},
 	}
