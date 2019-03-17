@@ -3,6 +3,7 @@ package goldrpc
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/MarkLux/GOLD/serving/common"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -35,15 +36,8 @@ func (s *GoldRpcServer) Call(ctx context.Context, req *SyncRequest) (rsp *SyncRe
 	if err != nil {
 		return
 	}
-	// add-on
-	goldEnv, err := common.GetGoldEnv()
-	if err != nil {
-		log.Printf("fail to get gold env, %s", err.Error())
-		goldEnv = &common.GoldEnv{}
-		err = nil
-	}
 	goldRsp.TimeStamp = time.Now().Unix()
-	goldRsp.Handler = goldEnv.PodName
+	goldRsp.Handler = common.GetGoldEnv().PodName
 	// transfer the response
 	b, err := json.Marshal(&goldRsp.Data)
 	if err != nil {
@@ -59,7 +53,8 @@ func (s *GoldRpcServer) Call(ctx context.Context, req *SyncRequest) (rsp *SyncRe
 }
 
 func (s *GoldRpcServer) Serve() error {
-	lis, err := net.Listen("tcp", s.BindPort)
+	bindPort := fmt.Sprintf(":%s", s.BindPort)
+	lis, err := net.Listen("tcp", bindPort)
 	if err != nil {
 		return err
 	}

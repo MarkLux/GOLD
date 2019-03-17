@@ -1,12 +1,14 @@
 package common
 
 import (
+	"github.com/MarkLux/GOLD/serving/wrapper/constant"
 	"os"
 	"sync"
 )
 
 type GoldEnv struct {
 	PodName string
+	ServiceName string
 }
 
 var gENV *GoldEnv = nil
@@ -17,17 +19,22 @@ func InitGoldEnv() error {
 	if err != nil {
 		return err
 	}
-	gENV = &GoldEnv{PodName: hostName}
+	serviceName := os.Getenv(constant.GoldServiceNameEnvKey)
+	gENV = &GoldEnv{PodName: hostName, ServiceName: serviceName}
 	return nil
 }
 
-func GetGoldEnv() (env *GoldEnv, err error) {
+func GetGoldEnv() (env *GoldEnv) {
 	if gENV != nil {
 		env = gENV
 	} else {
 		envOnce.Do(func() {
-			err = InitGoldEnv()
-			env = gENV
+			err := InitGoldEnv()
+			if err != nil {
+				env = &GoldEnv{ServiceName: "Unknown", PodName: "Unknown"}
+			} else {
+				env = gENV
+			}
 		})
 	}
 	return

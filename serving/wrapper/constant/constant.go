@@ -7,4 +7,6 @@ const (
 	GoldNamespace = "gold"
 	// default client timeout
 	DefaultClientTimeOut = 3000
+	// env var name of service name
+	GoldServiceNameEnvKey = "GOLD_SERVICE_NAME"
 )

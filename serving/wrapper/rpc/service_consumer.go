@@ -6,35 +6,40 @@ import (
 	"github.com/MarkLux/GOLD/serving/wrapper/constant"
 	"k8s.io/api/core/v1"
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"time"
 )
 
 // interface
 type ServiceConsumer interface {
-	Request(
-		request goldrpc.GoldRequest,
-		clientTimeOut int64) (goldrpc.GoldResponse, error)
+	Request(request map[string]interface{}) (map[string]interface{}, error)
 }
 
 // implement
-type RemoteServiceConsumer struct {
+type GoldServiceConsumer struct {
 	// the target service name in gold
 	TargetServiceName string
 	// timeout setting for client
 	ClientTimeOut int64
 }
 
-func GetRemoteService(serviceName string) (*RemoteServiceConsumer) {
+func GetRemoteService(serviceName string) (*GoldServiceConsumer) {
 	return GetRemoteServiceWithTimeOut(serviceName, constant.DefaultClientTimeOut)
 }
 
-func GetRemoteServiceWithTimeOut(serviceName string, timeout int64) (*RemoteServiceConsumer) {
-	return &RemoteServiceConsumer{
+func GetRemoteServiceWithTimeOut(serviceName string, timeout int64) (*GoldServiceConsumer) {
+	return &GoldServiceConsumer{
 		TargetServiceName: serviceName,
 		ClientTimeOut: timeout,
 	}
 }
 
-func (consumer *RemoteServiceConsumer) Request(request goldrpc.GoldRequest) (response *goldrpc.GoldResponse, err error) {
+func (consumer *GoldServiceConsumer) Request(req map[string]interface{}) (rsp map[string]interface{}, err error) {
+	// 0. parseRequest
+	request := &goldrpc.GoldRequest{
+		Invoker: common.GetGoldEnv().PodName,
+		TimeStamp: time.Now().Unix(),
+		Data: req,
+	}
 	// 1. using k8s api to found the service
 	service, err := parseService(consumer.TargetServiceName)
 	if err != nil {
@@ -52,10 +57,11 @@ func (consumer *RemoteServiceConsumer) Request(request goldrpc.GoldRequest) (res
 		TimeOut:    consumer.ClientTimeOut,
 	}
 	// 3. sync get response and return
-	response, err = rpcClient.RequestSync(&request)
+	response, err := rpcClient.RequestSync(request)
 	if err != nil {
 		return
 	}
+	rsp = response.Data
 	return
 }
 

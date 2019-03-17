@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"github.com/MarkLux/GOLD/serving/common"
 	"google.golang.org/grpc"
-	"log"
 	"time"
 )
 
@@ -17,18 +16,13 @@ type GoldRpcClient struct {
 
 func (client *GoldRpcClient) RequestSync(request *GoldRequest) (response *GoldResponse, err error) {
 	response = nil
-	goldEnv, err := common.GetGoldEnv()
-	if err != nil || goldEnv == nil {
-		log.Printf("warning: fail to get gold env, %s", err.Error())
-		goldEnv = &common.GoldEnv{}
-	}
 	// encode the data into json
 	jsonBytes, err := json.Marshal(request.Data)
 	if err != nil {
 		return
 	}
 	reqData := &SyncData{
-		Sender:    goldEnv.PodName,
+		Sender:    common.GetGoldEnv().PodName,
 		Data:      jsonBytes,
 		Timestamp: time.Now().Unix(),
 	}
