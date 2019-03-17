@@ -21,10 +21,8 @@ message SyncResponse {
 message SyncData {
     // the sender of data (service name).
     string sender = 1;
-    // data source endpoint.
-    string endpoint = 2;
     // the timestamp of data generation.
-    int64 timestamp = 3;
+    int64 timestamp = 2;
     // real transfer data in json string format.
-    string data = 4;
+    bytes data = 3;
 }
