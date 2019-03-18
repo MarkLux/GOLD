@@ -9,7 +9,7 @@ import (
 func (s *GoldService) Handle(req *goldrpc.GoldRequest, rsp *goldrpc.GoldResponse) error {
 	fmt.Println("Get Response")
 	// rpc example
-	helloService := rpc.GetRemoteService("helloService")
+	helloService := rpc.GetRemoteService("hello-service")
 	helloReq := make(map[string]interface{})
 	data := make(map[string]interface{})
 	helloReq["name"] = "lumin"
