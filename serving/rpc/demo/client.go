@@ -19,8 +19,7 @@ func main() {
 		TimeOut:    3000,
 	}
 	m := make(map[string]interface{})
-	m["Name"] = "mark"
-	m["Age"] = 22
+	m["name"] = "mark"
 	req := &goldrpc.GoldRequest{
 		Invoker:   serviceName,
 		TimeStamp: time.Now().Unix(),

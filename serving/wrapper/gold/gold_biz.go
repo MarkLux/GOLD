@@ -7,6 +7,7 @@ import (
 )
 
 func (s *GoldService) Handle(req *goldrpc.GoldRequest, rsp *goldrpc.GoldResponse) error {
+	fmt.Println("Get Response")
 	// rpc example
 	helloService := rpc.GetRemoteService("helloService")
 	helloReq := make(map[string]interface{})
