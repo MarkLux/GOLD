@@ -8,6 +8,6 @@ import (
 
 func main() {
 	r := gin.Default()
-	r.GET("/service/response", trigger.HandleInvoke)
+	r.POST("/service/response", trigger.HandleInvoke)
 	r.Run(":8080")
 }
