@@ -9,12 +9,9 @@ WORKDIR /home
 RUN git clone https://github.com/MarkLux/GOLD
 
 # build the project
-WORKDIR /home/GOLD
-RUN go mod init
-# start the server
 WORKDIR /home/GOLD/serving/wrapper
 RUN go build
-CMD ./main
+CMD ./wrapper
 
 # expose the port
 EXPOSE 8080
