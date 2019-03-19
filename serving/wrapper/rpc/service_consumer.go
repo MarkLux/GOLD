@@ -40,7 +40,9 @@ func (consumer *GoldServiceConsumer) Request(req map[string]interface{}) (rsp ma
 		TimeStamp: time.Now().Unix(),
 		Data: req,
 	}
-	// 1. using k8s api to found the service
+	// 1. using k8s api to found the service -- deprecated
+	// using kube-dns instead.
+	/*
 	service, err := parseService(consumer.TargetServiceName)
 	if err != nil {
 		return
@@ -50,9 +52,10 @@ func (consumer *GoldServiceConsumer) Request(req map[string]interface{}) (rsp ma
 		err = common.ServiceNotFoundErr{TargetService: consumer.TargetServiceName, Detail: "got blank cluster ip."}
 		return
 	}
+	*/
 	// 2. make request through service cluster ip
 	rpcClient := &goldrpc.GoldRpcClient{
-		TargetIP:   clusterIP,
+		TargetIP:   consumer.TargetServiceName,
 		TargetPort: constant.DefaultServicePort,
 		TimeOut:    consumer.ClientTimeOut,
 	}
