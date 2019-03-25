@@ -5,14 +5,12 @@ metadata:
   namespace: gold
   labels:
     app: redis
-    role: master
-    tier: backend
 spec:
-  type: LoadBalancer
   ports:
-    - port: 6379
+    - name: redis-port
+      protocol: "TCP"
+      port: 6379
       targetPort: 6379
   selector:
     app: redis
-    role: master
-    tier: backend
+    appCluster: redis-cluster
