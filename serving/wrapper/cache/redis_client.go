@@ -2,7 +2,6 @@ package cache
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/MarkLux/GOLD/serving/common"
 	"github.com/MarkLux/GOLD/serving/wrapper/constant"
 	"github.com/go-redis/redis"
