@@ -1,6 +1,7 @@
 package gold
 
 import (
+	"fmt"
 	"github.com/MarkLux/GOLD/serving/wrapper/rpc"
 	"github.com/MarkLux/GOLD/serving/wrapper/cache"
 )
@@ -15,15 +16,16 @@ func (e *LaunchError) Error() string {
 
 type GoldService struct {
 	RpcConsumer rpc.GoldServiceConsumer
-	CacheClient *cache.GoldCacheClient
+	CacheClient cache.GoldCacheClient
 }
 
 func (s *GoldService) LoadComponents() error {
 	// load all the required injection here.
-	s.CacheClient = cache.GetGoldRedisClient()
-	if s.CacheClient == nil {
+	var err error
+	s.CacheClient, err = cache.GetGoldRedisClient()
+	if err != nil {
 		// init failed.
-		return &LaunchError{Message: "fail to init redis client."}
+		return &LaunchError{Message: fmt.Sprintf("fail to init redis client, %s", err.Error())}
 	}
 	return nil
 }

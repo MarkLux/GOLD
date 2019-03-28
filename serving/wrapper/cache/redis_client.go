@@ -2,6 +2,7 @@ package cache
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/MarkLux/GOLD/serving/common"
 	"github.com/MarkLux/GOLD/serving/wrapper/constant"
 	"github.com/go-redis/redis"
@@ -15,15 +16,12 @@ const DEFAULT_PREFIX = "gold_redis_key_"
 var instance *GoldRedisClient
 var once sync.Once
 
-func GetGoldRedisClient() *GoldRedisClient {
+func GetGoldRedisClient() (ins *GoldRedisClient, err error) {
 	once.Do(func() {
-		var err error
 		instance, err = NewGoldRedisClient()
-		if err != nil {
-			log.Printf("fail to init gold redis client, %s", err.Error())
-		}
 	})
-	return instance
+	ins = instance
+	return
 }
 
 type GoldRedisClient struct {
