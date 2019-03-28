@@ -2,10 +2,14 @@ package main
 
 import (
 	"github.com/MarkLux/GOLD/serving/wrapper/gold"
+	"log"
 )
 
 func main() {
 	s := &gold.GoldService{}
-	s.LoadComponents()
+	err := s.LoadComponents()
+	if err != nil {
+		log.Fatal("fail to launch service, ", err)
+	}
 	s.LaunchService()
 }

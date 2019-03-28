@@ -9,4 +9,6 @@ const (
 	DefaultClientTimeOut = 3000
 	// env var name of service name
 	GoldServiceNameEnvKey = "GOLD_SERVICE_NAME"
+	// redis service
+	GoldRedisServiceName = "gold-redis"
 )
