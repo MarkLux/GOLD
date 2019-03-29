@@ -2,6 +2,7 @@ package cache
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/MarkLux/GOLD/serving/common"
 	"github.com/MarkLux/GOLD/serving/wrapper/constant"
 	"github.com/go-redis/redis"
@@ -39,6 +40,7 @@ func NewGoldRedisClient() (*GoldRedisClient, error) {
 		log.Printf("fail to init redis client, %s", err.Error())
 		return nil, err
 	}
+	fmt.Println("succeed connect to redis cluster, server pong: ", pong)
 	log.Printf("succeed connect to redis cluster, server pong: %s", pong)
 	return &GoldRedisClient{rClient: c}, nil
 }
