@@ -2,9 +2,7 @@ package cache
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/MarkLux/GOLD/serving/common"
-	"github.com/MarkLux/GOLD/serving/wrapper/constant"
 	"github.com/go-redis/redis"
 	"log"
 	"sync"
@@ -25,14 +23,20 @@ func GetGoldRedisClient() (ins *GoldRedisClient, err error) {
 }
 
 type GoldRedisClient struct {
-	rClient *redis.Client
+	rClient *redis.ClusterClient
 }
 
 func NewGoldRedisClient() (*GoldRedisClient, error) {
-	c := redis.NewClient(&redis.Options{
-		Addr:     constant.GoldRedisServiceName + ":6379",
-		Password: "",
-		DB:       0,
+	c := redis.NewClusterClient(&redis.ClusterOptions{
+		// why can't I use a single service name?
+		Addrs: []string {
+			"redis-app-0.redis-service:6379",
+			"redis-app-1.redis-service:6379",
+			"redis-app-2.redis-service:6379",
+			"redis-app-3.redis-service:6379",
+			"redis-app-4.redis-service:6379",
+			"redis-app-5.redis-service:6379",
+		},
 	})
 	// test conn
 	pong, err := c.Ping().Result()
@@ -40,7 +44,6 @@ func NewGoldRedisClient() (*GoldRedisClient, error) {
 		log.Printf("fail to init redis client, %s", err.Error())
 		return nil, err
 	}
-	fmt.Println("succeed connect to redis cluster, server pong: ", pong)
 	log.Printf("succeed connect to redis cluster, server pong: %s", pong)
 	return &GoldRedisClient{rClient: c}, nil
 }
