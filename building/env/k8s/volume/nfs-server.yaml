@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: nfs-server
-          image: registry.cn-qingdao.aliyuncs.com/gcr-mock/nfs_server:1.11
+          image: registry.cn-qingdao.aliyuncs.com/gold-faas/gold-nfs-server:1.0.beta
           ports:
             - name: nfs
               containerPort: 2049
