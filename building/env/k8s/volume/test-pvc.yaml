@@ -1,0 +1,12 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: nfs-test
+  namespace: gold
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: gold-nfs
+  resources:
+    requests:
+      storage: 50Mi
