@@ -10,6 +10,6 @@ spec:
     - ReadWriteMany
   storageClassName: gold-nfs
   nfs:
-    path: "/storage"
+    path: "/exports"
     # FIX: fill with the right ip after creating the nfs server
-    server: 172.17.0.17
+    server: 172.17.0.20

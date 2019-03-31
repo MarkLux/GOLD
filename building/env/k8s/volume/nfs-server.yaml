@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: nfs-server
-          image: registry.cn-qingdao.aliyuncs.com/gold-faas/gold-nfs-server:1.1.beta
+          image: registry.cn-qingdao.aliyuncs.com/gold-faas/gold-nfs-server:1.2.beta
           ports:
             - name: nfs
               containerPort: 2049
@@ -25,7 +25,7 @@ spec:
           securityContext:
             privileged: true
           volumeMounts:
-            - mountPath: /storage
+            - mountPath: /exports
               name: mypvc
       volumes:
         - name: mypvc
