@@ -1,3 +1,5 @@
+# WARNING: deprecated due to the mount error.
+# using local storage in minikube environment
 apiVersion: v1
 kind: ReplicationController
 metadata:
@@ -14,7 +16,7 @@ spec:
     spec:
       containers:
         - name: nfs-server
-          image: registry.cn-qingdao.aliyuncs.com/gold-faas/gold-nfs-server:1.2.beta
+          image: cpuguy83/nfs-server
           ports:
             - name: nfs
               containerPort: 2049
@@ -24,6 +26,9 @@ spec:
               containerPort: 111
           securityContext:
             privileged: true
+          args:
+            # Pass the paths to share to the Docker image
+            - /exports
           volumeMounts:
             - mountPath: /exports
               name: mypvc
