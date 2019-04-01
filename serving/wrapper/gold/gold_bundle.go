@@ -2,8 +2,8 @@ package gold
 
 import (
 	"fmt"
-	"github.com/MarkLux/GOLD/serving/wrapper/rpc"
 	"github.com/MarkLux/GOLD/serving/wrapper/cache"
+	"github.com/MarkLux/GOLD/serving/wrapper/db"
 )
 
 type LaunchError struct {
@@ -15,7 +15,7 @@ func (e *LaunchError) Error() string {
 }
 
 type GoldService struct {
-	RpcConsumer rpc.GoldServiceConsumer
+	// singleton component, inject here.
 	CacheClient cache.GoldCacheClient
 }
 

@@ -10,5 +10,11 @@ const (
 	// env var name of service name
 	GoldServiceNameEnvKey = "GOLD_SERVICE_NAME"
 	// redis service
-	GoldRedisServiceName = "172.17.0.11"
+	GoldRedisServiceName = "gold-service"
+	// redis port
+	GoldRedisServicePort = 6379
+	// mongo primary entry
+	GoldMongoPrimaryEndPoint = "mongod-0.mongo-service.gold.svc.cluster.local"
+	// mongo port
+	GoldMongoServicePort = 27017
 )

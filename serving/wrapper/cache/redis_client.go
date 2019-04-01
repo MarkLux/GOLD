@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-const DEFAULT_PREFIX = "gold_redis_key_"
+const DefaultPrefix = "gold_redis_key_"
 
 var instance *GoldRedisClient
 var once sync.Once
@@ -29,6 +29,7 @@ type GoldRedisClient struct {
 func NewGoldRedisClient() (*GoldRedisClient, error) {
 	c := redis.NewClusterClient(&redis.ClusterOptions{
 		// why can't I use a single service name?
+		// fix: do not use hard codec
 		Addrs: []string {
 			"redis-app-0.redis-service:6379",
 			"redis-app-1.redis-service:6379",
@@ -79,5 +80,5 @@ func (r *GoldRedisClient) Get(key string) (interface{}, error) {
 }
 
 func genKey(raw string) string {
-	return DEFAULT_PREFIX + common.GetGoldEnv().ServiceName + "_" + raw
+	return DefaultPrefix + common.GetGoldEnv().ServiceName + "_" + raw
 }
