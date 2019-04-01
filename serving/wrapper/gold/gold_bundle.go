@@ -3,7 +3,6 @@ package gold
 import (
 	"fmt"
 	"github.com/MarkLux/GOLD/serving/wrapper/cache"
-	"github.com/MarkLux/GOLD/serving/wrapper/db"
 )
 
 type LaunchError struct {
