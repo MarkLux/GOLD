@@ -12,9 +12,9 @@ const (
 	// redis service
 	GoldRedisServiceName = "gold-service"
 	// redis port
-	GoldRedisServicePort = 6379
+	GoldRedisServicePort = "6379"
 	// mongo primary entry
 	GoldMongoPrimaryEndPoint = "mongod-0.mongo-service.gold.svc.cluster.local"
 	// mongo port
-	GoldMongoServicePort = 27017
+	GoldMongoServicePort = "27017"
 )
