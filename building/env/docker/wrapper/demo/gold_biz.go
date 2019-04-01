@@ -40,18 +40,16 @@ func (s *GoldService) Handle(req *goldrpc.GoldRequest, rsp *goldrpc.GoldResponse
 	if err != nil {
 		log.Println("db session err: ", err)
 	} else {
-		do := db.GoldDO{
-			Data: UserModel{
-				Name: "lumin",
+		do := UserModel{
+				Name: name.(string),
 				Sex: "man",
-			},
-		}
+			}
 		err = session.Insert(do)
 		if err != nil {
 			log.Println("insert err: ", err)
 		} else {
 			p := make(map[string]string)
-			p["name"] = "lumin"
+			p["data.name"] = "lumin"
 			doList, err := session.Query(db.GoldDBQuery{
 				Param: p,
 			})

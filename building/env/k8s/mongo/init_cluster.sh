@@ -27,6 +27,6 @@ sleep 30
 kubectl exec mongod-0 -c mongod-container -- mongo --eval 'rs.status();'
 
 # Create the admin user (this will automatically disable the localhost exception)
-echo "Creating user: 'main_admin'"
-kubectl exec mongod-0 -c mongod-container -- mongo --eval 'db.getSiblingDB("admin").createUser({user:"main_admin",pwd:"'"${1}"'",roles:[{role:"root",db:"admin"}]});'
+echo "Creating user: 'root'"
+kubectl exec mongod-0 -c mongod-container -- mongo --eval 'db.getSiblingDB("admin").createUser({user:"root",pwd:"'"${1}"'",roles:[{role:"root",db:"admin"}]});'
 echo

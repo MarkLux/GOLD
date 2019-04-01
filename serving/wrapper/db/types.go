@@ -29,7 +29,7 @@ type GoldDataBaseClient interface {
 type GoldDataBaseSession interface {
 	// single data handlers
 	Get(id string) (data GoldDO, err error)
-	Insert(do GoldDO) error
+	Insert(data interface{}) error
 	Update(do GoldDO) error
 	Delete(id string) error
 	// batch data handlers

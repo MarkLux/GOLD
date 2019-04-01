@@ -7,6 +7,13 @@ import (
 	"time"
 )
 
+// to avoid insert empty object id, create a do for insert
+type GoldInsertDO struct {
+	Data      interface{} `bson:"data"`
+	CreatedAt int64       `bson:"created_at"`
+	UpdatedAt int64       `bson:"updated_at"`
+}
+
 // export method
 func NewMongoClient(db string, user string, pwd string) GoldMongoClient {
 	return GoldMongoClient{
@@ -57,11 +64,13 @@ func (s *GoldMongoSession) Get(id string) (data GoldDO, err error) {
 	return
 }
 
-func (s *GoldMongoSession) Insert(do GoldDO) (err error) {
+func (s *GoldMongoSession) Insert(data interface{}) (err error) {
 	now := time.Now().Unix()
-	do.CreatedAt = now
-	do.UpdatedAt = now
-	err = s.session.DB(s.dataBase).C(s.table).Insert(do)
+	err = s.session.DB(s.dataBase).C(s.table).Insert(&GoldInsertDO{
+		CreatedAt: now,
+		UpdatedAt: now,
+		Data:      data,
+	})
 	return
 }
 
