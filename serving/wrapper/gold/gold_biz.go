@@ -6,6 +6,7 @@ import (
 	"github.com/MarkLux/GOLD/serving/wrapper/rpc"
 )
 
+
 func (s *GoldService) Handle(req *goldrpc.GoldRequest, rsp *goldrpc.GoldResponse) error {
 	fmt.Println("Get Response")
 	// rpc example
