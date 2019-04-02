@@ -10,7 +10,7 @@
 
 The function services running on GOLD have 3 main capacities:
 
-- RPC: to invoke another function services.
+- RPC: to invoke other function services.
 - DB access: to query from the built-in database cluster.
 - Cache: set & get data from the built-in cache cluster.
 
