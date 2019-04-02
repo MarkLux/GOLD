@@ -27,19 +27,20 @@ func (GoldRpcFactory) NewRemoteServiceConsumer(serviceName string, timeOut int64
 	return rpc.GetRemoteServiceWithTimeOut(serviceName, timeOut)
 }
 
-func (f GoldDbFactory) NewDataBaseSession(db string, tb string, user string, pwd string) *db.GoldDataBaseSession {
+func (f GoldDbFactory) NewDataBaseSession(dataBase string, tb string, user string, pwd string) (db.GoldDataBaseSession, error) {
 	if f.Driver == "mongo" {
 		// currently just bind mongo client here
-		return db.NewMongoClient(db, user, pwd).NewSessoin(tb)
+		return db.NewMongoClient(dataBase, user, pwd).NewSession(tb)
 	} else {
-		return nil
+		return nil, db.DBCommonError{Message:"Invalid Driver"}
 	}
 }
 
-func (f GoldDbFactory) NewDataBaseClient(db string, user string, pwd string) *db.GoldDataBaseSession {
+func (f GoldDbFactory) NewDataBaseClient(dataBase string, user string, pwd string) db.GoldDataBaseClient {
 	if f.Driver == "mongo" {
 		// currently just bind mongo client here
-		return db.NewMongoClient(db, user, pwd)
+		client := db.NewMongoClient(dataBase, user, pwd)
+		return &client
 	} else {
 		return nil
 	}
