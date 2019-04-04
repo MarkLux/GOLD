@@ -40,7 +40,7 @@ func (f GoldDbFactory) NewDataBaseClient(dataBase string, user string, pwd strin
 	if f.Driver == "mongo" {
 		// currently just bind mongo client here
 		client := db.NewMongoClient(dataBase, user, pwd)
-		return &client
+		return client
 	} else {
 		return nil
 	}
