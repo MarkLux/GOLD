@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: gold-http-trigger
+  namespace: gold
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: gold-http-trigger
+        tier: trigger
+    spec:
+      containers:
+        - name: gold-http-trigger
+          image: registry.cn-qingdao.aliyuncs.com/gold-faas/gold-http-trigger:1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gold-http-trigger-service
+  namespace: gold
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      name: container-port
+  selector:
+    app: gold-http-trigger
