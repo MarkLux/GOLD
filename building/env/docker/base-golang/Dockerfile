@@ -1,13 +1,12 @@
 # The custom basic envirnoment for golang
-FROM registry.docker-cn.com/library/ubuntu:16.04
+FROM centos
 LABEL maintainer="MarkLux"
-# change with aliyun sources
-# ADD sources.list /etc/apt/sources.list
 # install dependencies
-RUN apt-get update&&apt-get -y install \
-    gcc g++\
-    git\
-    wget
+RUN yum install -y \
+    gcc g++ \
+    git \
+    wget \
+    && yum clean all
 # create work dir
 RUN mkdir -p /home/go
 WORKDIR /home/go
