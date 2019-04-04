@@ -15,8 +15,8 @@ type GoldInsertDO struct {
 }
 
 // export method
-func NewMongoClient(db string, user string, pwd string) GoldMongoClient {
-	return GoldMongoClient{
+func NewMongoClient(db string, user string, pwd string) *GoldMongoClient {
+	return &GoldMongoClient{
 		DataBase:  db,
 		AuthUser:  user,
 		AuthToken: pwd,
