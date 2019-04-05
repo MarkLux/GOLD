@@ -30,7 +30,6 @@ func (s *GoldService) Handle(req *goldrpc.GoldRequest, rsp *goldrpc.GoldResponse
 	u, err := s.CacheClient.Get(cacheKey)
 	if err != nil {
 		log.Println("fail to get info from cache, ", err)
-		return err
 	}
 
 	// if got nothing from cache, then query the db.

@@ -1,12 +1,7 @@
-FROM registry.cn-qingdao.aliyuncs.com/gold-faas/gold-base-env-golang:1.0
+FROM registry.cn-qingdao.aliyuncs.com/gold-faas/gold-faas-wrapper:0.1.beta
 
 # create work dir
 WORKDIR /home
-
-# install dependency
-
-# pull the code
-RUN git clone https://github.com/MarkLux/GOLD
 
 # copy biz code
 COPY gold_biz.go /home/GOLD/serving/wrapper/gold/gold_biz.go
