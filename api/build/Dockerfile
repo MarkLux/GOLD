@@ -5,11 +5,9 @@ WORKDIR /home
 
 ARG REPO_URL
 ARG REPO_NAME
-ARG BRANCH
 
 RUN git clone $REPO_URL \
     && cd $REPO_NAME \
-    && git checkout $BRANCH \
     && cp gold_biz.go /home/GOLD/serving/wrapper/gold/gold_biz.go
 
 # build the project
