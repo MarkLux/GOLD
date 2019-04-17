@@ -35,7 +35,7 @@ func (s *GoldService) Handle(req *goldrpc.GoldRequest, rsp *goldrpc.GoldResponse
 	}
 	data["cacheResult"] = mm
 	// the db for mongo
-	dbClient := db.NewMongoClient("test", "main_admin", "abc123")
+	dbClient := db.NewMongoClient("test", "tst", "123")
 	session, err := dbClient.NewSession("tb")
 	if err != nil {
 		log.Println("db session err: ", err)
