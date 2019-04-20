@@ -14,7 +14,7 @@ import (
 
 const (
 	maintainer = "MarkLux"
-	privateRegistry = "gold-registry:5000"
+	privateRegistry = "gold-registry:8099"
 )
 
 func main() {
