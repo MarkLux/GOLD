@@ -22,6 +22,8 @@ type FunctionService struct {
 	Status string
 	LastOperation int64
 	AddOn string
+	MinInstance int
+	MaxInstance int
 	CreatedAt int64
 	UpdatedAt int64
 }
