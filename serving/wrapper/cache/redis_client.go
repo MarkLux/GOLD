@@ -28,15 +28,15 @@ type GoldRedisClient struct {
 
 func NewGoldRedisClient() (*GoldRedisClient, error) {
 	c := redis.NewClusterClient(&redis.ClusterOptions{
-		// why can't I use a single service name?
+		// why can't I use a single restful name?
 		// fix: do not use hard codec
 		Addrs: []string {
-			"redis-app-0.redis-service:6379",
-			"redis-app-1.redis-service:6379",
-			"redis-app-2.redis-service:6379",
-			"redis-app-3.redis-service:6379",
-			"redis-app-4.redis-service:6379",
-			"redis-app-5.redis-service:6379",
+			"redis-app-0.redis-restful:6379",
+			"redis-app-1.redis-restful:6379",
+			"redis-app-2.redis-restful:6379",
+			"redis-app-3.redis-restful:6379",
+			"redis-app-4.redis-restful:6379",
+			"redis-app-5.redis-restful:6379",
 		},
 	})
 	// test conn

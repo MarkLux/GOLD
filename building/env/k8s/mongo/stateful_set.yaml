@@ -4,7 +4,7 @@ metadata:
   name: mongod
   namespace: gold
 spec:
-  serviceName: mongo-service
+  serviceName: mongo-restful
   replicas: 4
   template:
     metadata:

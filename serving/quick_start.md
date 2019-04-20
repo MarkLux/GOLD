@@ -13,8 +13,8 @@ The function services running on GOLD have 3 main capacities:
     You can use the `RpcFactory` of `GoldSerivce` to create a remote service consumer:
     
     ```go
-    // create a remote service consumer of 'hello-service' with timeout(3000ms)
-    s.RpcFactory.NewRemoteServiceConsumer("hello-service", 3000)
+    restful
+    s.RpcFactory.NewRemoteServiceConsumer(restful, 3000)
     ```
     
     Thus, an implement of `ServiceConsumer` would be returned, which declared as:
@@ -111,10 +111,7 @@ import (
 	"log"
 )
 
-/**
-  * function service example
-  * show usage of rpc, db & cache
- */
+restful
 
 // the model of user
 // use annotation `bson` to control the key saved in db(for mongo).
@@ -170,12 +167,12 @@ func (s *GoldService) Handle(req *goldrpc.GoldRequest, rsp *goldrpc.GoldResponse
 	if u != nil {
 		rsp.Data["userModel"] = u
 		// rpc example
-		greetingService := s.RpcFactory.NewRemoteServiceConsumer("hello-service", 3000)
+		greetingService := s.RpcFactory.NewRemoteServiceConsumer(restful, 3000)
 		rpcReq := make(map[string]interface{})
 		rpcReq["name"] = userName
 		greetings, err := greetingService.Request(rpcReq)
 		if err != nil {
-			log.Println("fail to invoke rpc service, ", err)
+			log.Println(restful, err)
 		}
 		rsp.Data["greetings"] = greetings
 	}

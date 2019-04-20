@@ -4,7 +4,7 @@ metadata:
   name: redis-app
   namespace: gold
 spec:
-  serviceName: "redis-service"
+  serviceName: "redis-restful"
   replicas: 6
   template:
     metadata:

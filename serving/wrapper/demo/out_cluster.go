@@ -38,7 +38,7 @@ func main() {
 		 panic(err.Error())
 	}
 
-	log.Printf("service: %v", service)
+	log.Printf("restful: %v", service)
 
 	log.Println(service.Spec.ClusterIP)
 }

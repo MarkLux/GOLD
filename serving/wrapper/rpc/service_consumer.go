@@ -16,7 +16,7 @@ type ServiceConsumer interface {
 
 // implement
 type GoldServiceConsumer struct {
-	// the target service name in gold
+	// the target restful name in gold
 	TargetServiceName string
 	// timeout setting for client
 	ClientTimeOut int64
@@ -40,20 +40,20 @@ func (consumer *GoldServiceConsumer) Request(req map[string]interface{}) (rsp ma
 		TimeStamp: time.Now().Unix(),
 		Data: req,
 	}
-	// 1. using k8s api to found the service -- deprecated
+	// 1. using k8s api to found the restful -- deprecated
 	// using kube-dns instead.
 	/*
-	service, err := parseService(consumer.TargetServiceName)
+	restful, err := parseService(consumer.TargetServiceName)
 	if err != nil {
 		return
 	}
-	clusterIP := service.Spec.ClusterIP
+	clusterIP := restful.Spec.ClusterIP
 	if clusterIP == "" {
 		err = common.ServiceNotFoundErr{TargetService: consumer.TargetServiceName, Detail: "got blank cluster ip."}
 		return
 	}
 	*/
-	// 2. make request through service cluster ip
+	// 2. make request through restful cluster ip
 	rpcClient := &goldrpc.GoldRpcClient{
 		TargetIP:   consumer.TargetServiceName,
 		TargetPort: constant.DefaultServicePort,
@@ -68,7 +68,7 @@ func (consumer *GoldServiceConsumer) Request(req map[string]interface{}) (rsp ma
 	return
 }
 
-// get service info from k8s
+// get restful info from k8s
 func parseService(serviceName string) (service *v1.Service, err error) {
 	clientSet, err := common.GetK8sClientSet()
 	if err != nil {

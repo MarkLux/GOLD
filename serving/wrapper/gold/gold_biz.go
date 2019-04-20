@@ -7,7 +7,7 @@ import (
 )
 
 /**
-  * function service example
+  * function restful example
   * show usage of rpc, db & cache
  */
 
@@ -65,12 +65,12 @@ func (s *GoldService) Handle(req *goldrpc.GoldRequest, rsp *goldrpc.GoldResponse
 	if u != nil {
 		rsp.Data["userModel"] = u
 		// rpc example
-		greetingService := s.RpcFactory.NewRemoteServiceConsumer("hello-service", 3000)
+		greetingService := s.RpcFactory.NewRemoteServiceConsumer("hello-restful", 3000)
 		rpcReq := make(map[string]interface{})
 		rpcReq["name"] = userName
 		greetings, err := greetingService.Request(rpcReq)
 		if err != nil {
-			log.Println("fail to invoke rpc service, ", err)
+			log.Println("fail to invoke rpc restful, ", err)
 		}
 		rsp.Data["greetings"] = greetings
 	}

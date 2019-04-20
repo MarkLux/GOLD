@@ -17,7 +17,7 @@ type UserModel struct {
 }
 
 func (s *GoldService) Handle(req *goldrpc.GoldRequest, rsp *goldrpc.GoldResponse) error {
-	// the rpc provider of hello service.
+	// the rpc provider of hello restful.
 	fmt.Printf("Get Request: %v \n", req)
 	name := req.Data["name"]
 	data := make(map[string]interface{})

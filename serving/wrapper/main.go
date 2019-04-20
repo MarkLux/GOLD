@@ -9,7 +9,7 @@ func main() {
 	s := &gold.GoldService{}
 	err := s.LoadComponents()
 	if err != nil {
-		log.Fatal("fail to launch service, ", err)
+		log.Fatal("fail to launch restful, ", err)
 	}
 	s.LaunchService()
 }

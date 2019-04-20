@@ -7,7 +7,7 @@ import (
 )
 
 /**
-  * function service example
+  * function restful example
   * show usage of rpc, db & cache
  */
 

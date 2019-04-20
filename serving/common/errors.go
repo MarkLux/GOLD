@@ -9,7 +9,7 @@ type ClientTimeOutErr struct {
 }
 
 func (e ClientTimeOutErr) Error() string {
-	return fmt.Sprintf("request service %s timeout after waiting %d",
+	return fmt.Sprintf("request restful %s timeout after waiting %d",
 		e.TargetService, e.ClientTimeOut)
 }
 
@@ -19,7 +19,7 @@ type ServiceNotFoundErr struct {
 }
 
 func (e ServiceNotFoundErr) Error() string {
-	return fmt.Sprintf("no service provider of %s found, detail info: %s", e.TargetService, e.Detail)
+	return fmt.Sprintf("no restful provider of %s found, detail info: %s", e.TargetService, e.Detail)
 }
 
 type KubernetesErr struct {

@@ -1,9 +1,9 @@
 package orm
 
 import (
+	"github.com/MarkLux/GOLD/api/restful/constant"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
-	"github.com/MarkLux/GOLD/api/service/constant"
 	"log"
 	"sync"
 )
@@ -15,9 +15,10 @@ var once sync.Once
 
 func InitOrmEngine() {
 	once.Do(func() {
-		dialUrl := "root:qwe123@localhost:3306/gold?charset=UTF-8"
+		// for mysql only
+		dsn := "root:qwe123@tcp(127.0.0.1:3306)/gold?charset=utf8"
 		var err error
-		engine, err = xorm.NewEngine(constant.DataBaseDriver, dialUrl)
+		engine, err = xorm.NewEngine(constant.DataBaseDriver, dsn)
 		if err != nil {
 			log.Printf("fail to init orm engine, %s", err.Error())
 		}

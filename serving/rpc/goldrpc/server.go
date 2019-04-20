@@ -62,7 +62,7 @@ func (s *GoldRpcServer) Serve() error {
 	grpcServer := grpc.NewServer()
 	RegisterRpcServer(grpcServer, s)
 	reflection.Register(grpcServer)
-	// bind and service
+	// bind and restful
 	if err := grpcServer.Serve(lis); err != nil{
 		return err
 	}

@@ -10,8 +10,8 @@ require (
 	github.com/gin-contrib/sse v0.0.0-20190301062529-5545eab6dad3 // indirect
 	github.com/gin-gonic/gin v1.3.0
 	github.com/go-redis/redis v6.15.2+incompatible
-	github.com/go-sql-driver/mysql v1.4.1 // indirect
-	github.com/go-xorm/xorm v0.7.1 // indirect
+	github.com/go-sql-driver/mysql v1.4.1
+	github.com/go-xorm/xorm v0.7.1
 	github.com/gogo/protobuf v1.2.1 // indirect
 	github.com/golang/protobuf v1.3.1
 	github.com/google/btree v0.0.0-20180813153112-4030bb1f1f0c // indirect

@@ -101,7 +101,7 @@ func (m *SyncResponse) GetData() *SyncData {
 }
 
 type SyncData struct {
-	// the sender of data (service name).
+	// the sender of data (restful name).
 	Sender string `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty"`
 	// the timestamp of data generation.
 	Timestamp int64 `protobuf:"varint,2,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
@@ -192,7 +192,7 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// RpcClient is the client API for Rpc service.
+// RpcClient is the client API for Rpc restful.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type RpcClient interface {
@@ -216,7 +216,7 @@ func (c *rpcClient) Call(ctx context.Context, in *SyncRequest, opts ...grpc.Call
 	return out, nil
 }
 
-// RpcServer is the server API for Rpc service.
+// RpcServer is the server API for Rpc restful.
 type RpcServer interface {
 	Call(context.Context, *SyncRequest) (*SyncResponse, error)
 }
