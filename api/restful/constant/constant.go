@@ -5,4 +5,6 @@ const (
 	DataBaseName = "gold"
 	DataBaseUser = "root"
 	DataBasePwd = "qwe123"
+
+	RedisAddr = "localhost:6379"
 )
