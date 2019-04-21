@@ -3,7 +3,6 @@ package cache
 import (
 	"github.com/MarkLux/GOLD/api/restful/constant"
 	"github.com/go-redis/redis"
-	"go/ast"
 	"sync"
 	"time"
 )

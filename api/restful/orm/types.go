@@ -2,36 +2,30 @@ package orm
 
 import "time"
 
-// base interface
-type TimeRecordable interface {
-	SetCreatedAt(int64)
-	SetUpdatedAt(int64)
-}
-
 type BaseDO struct {
-	CreatedAt int64
-	UpdatedAt int64
+	CreatedAt int64 `json:"createdAt"`
+	UpdatedAt int64 `json:"updatedAt"`
 }
 
-func (b BaseDO) InitTime() {
+func (b *BaseDO) InitTime() {
 	t := time.Now().Unix()
 	b.CreatedAt = t
 	b.UpdatedAt = t
 }
 
-func (b BaseDO) UpdateTime() {
+func (b *BaseDO) UpdateTime() {
 	b.UpdatedAt = time.Now().Unix()
 }
 
 // the data mapping structures for orm
 
 type User struct {
-	Id int64
-	Name string
-	Email string
-	Password string
-	AddOn string
-	BaseDO
+	Id int64 `json:"id"`
+	Name string `json:"name"`
+	Email string `json:"email"`
+	Password string `json:"password"`
+	AddOn string `json:"addOn"`
+	BaseDO `xorm:"extends"`
 }
 
 type FunctionService struct {
@@ -47,7 +41,7 @@ type FunctionService struct {
 	AddOn string
 	MinInstance int
 	MaxInstance int
-	BaseDO
+	BaseDO `xorm:"extends"`
 }
 
 type OperateLogs struct {
@@ -60,7 +54,7 @@ type OperateLogs struct {
 	End int64
 	CurrentAction string
 	Log string
-	BaseDO
+	BaseDO `xorm:"extends"`
 }
 
 // TableName() Method for X-ORM

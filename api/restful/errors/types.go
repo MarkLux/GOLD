@@ -3,8 +3,8 @@ package errors
 import "fmt"
 
 type RestError struct {
-	Code int
-	Message string
+	Code int `json:"code"`
+	Message string `json:"message"`
 }
 
 func (e RestError) Error() string {
@@ -17,8 +17,8 @@ func GenUnknownError() RestError {
 	return RestError{500, "系统异常，未知错误"}
 }
 
-func GenValidationError(column string) RestError {
-	return RestError{1001, fmt.Sprintf("表单验证错误，请检查您输入的%s", column)}
+func GenValidationError() RestError {
+	return RestError{1001, "表单验证错误，请检查输入"}
 }
 
 // 用户相关

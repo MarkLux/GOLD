@@ -7,4 +7,6 @@ const (
 	DataBasePwd = "qwe123"
 
 	RedisAddr = "localhost:6379"
+
+	LoginTokenExpiredTime = 10800000
 )

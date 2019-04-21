@@ -1,28 +1,38 @@
 package main
 
 import (
-	"github.com/MarkLux/GOLD/api/restful/orm"
-	"log"
-	"time"
+	"github.com/gin-gonic/gin"
+	"github.com/MarkLux/GOLD/api/restful/controller"
+	"net/http"
 )
 
 func main() {
-	engine := orm.GetOrmEngine()
-	if engine == nil {
-		panic("init orm engine failed!")
+	r := gin.Default()
+	r.Use(Cors())
+
+	// create controllers
+	userController := controller.NewUserController()
+
+	r.POST("/user/register", userController.RegisterUser)
+	r.POST("/user/login", userController.LoginUser)
+
+	r.Run(":8090")
+}
+
+// handle cors
+func Cors() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		method := c.Request.Method
+
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Headers", "Content-Type,AccessToken,X-CSRF-Token, Authorization, Token")
+		c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+		c.Header("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type")
+		c.Header("Access-Control-Allow-Credentials", "true")
+
+		if method == "OPTIONS" {
+			c.AbortWithStatus(http.StatusNoContent)
+		}
+		c.Next()
 	}
-	current := time.Now().Unix()
-	u := &orm.User{
-		Name: "lumin",
-		Email: "marlx6590@163.com",
-		CreatedAt: current,
-		UpdatedAt: current,
-		AddOn: "",
-	}
-	engine.ShowSQL(true)
-	affected, err := engine.Insert(u)
-	if err != nil {
-		panic(err)
-	}
-	log.Println(string(affected) + "rows inserted.")
 }
