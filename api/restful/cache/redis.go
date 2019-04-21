@@ -31,7 +31,7 @@ func GetRedisClient() *RedisClient {
 }
 
 func (c RedisClient) Set(key string, value string, expireTime int64) error {
-	return c.rClient.Set(key, value, time.Duration(expireTime)).Err()
+	return c.rClient.Set(key, value, time.Duration(expireTime) * time.Millisecond).Err()
 }
 
 func (c RedisClient) Get(key string) (string, error) {

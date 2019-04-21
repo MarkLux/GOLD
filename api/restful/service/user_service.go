@@ -40,11 +40,11 @@ func (s UserService) Register(user orm.User) (id int64, err error) {
 	return
 }
 
-func (s UserService) Login(email string, pwd string) (token string, err error) {
-	u := &orm.User{
+func (s UserService) Login(email string, pwd string) (user *orm.User, token string, err error) {
+	user = &orm.User{
 		Email: email,
 	}
-	has, err := s.engine.Get(u)
+	has, err := s.engine.Get(user)
 	if err != nil {
 		return
 	}
@@ -52,12 +52,14 @@ func (s UserService) Login(email string, pwd string) (token string, err error) {
 		err = errors.GenUserNotExistedError()
 		return
 	}
-	if utils.CheckMD5(pwd, u.Password) {
-		token, err = s.tokenService.createToken(u)
+	if utils.CheckMD5(pwd, user.Password) {
+		token, err = s.tokenService.CreateToken(user)
 	} else {
 		err = errors.GenPwdError()
 		return
 	}
+	// avoid to return user password
+	user.Password = ""
 	return
 }
 

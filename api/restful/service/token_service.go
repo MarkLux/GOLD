@@ -7,8 +7,11 @@ import (
 	"github.com/MarkLux/GOLD/api/restful/orm"
 	"github.com/MarkLux/GOLD/api/restful/utils"
 	"github.com/satori/go.uuid"
+	"log"
 	"sync"
 )
+
+const TokenPrefix = "user_token_"
 
 // the login token service implements by cache
 type TokenService struct {
@@ -18,7 +21,7 @@ type TokenService struct {
 var tokenInstance *TokenService
 var tokenOnce sync.Once
 
-func (s TokenService) createToken(user *orm.User) (token string, err error) {
+func (s TokenService) CreateToken(user *orm.User) (token string, err error) {
 	// generate user token
 	uuid := uuid.NewV4()
 	if err != nil {
@@ -30,13 +33,14 @@ func (s TokenService) createToken(user *orm.User) (token string, err error) {
 		return
 	}
 	// save into redis
-	err = s.rClient.Set(token, string(b), constant.LoginTokenExpiredTime)
+	log.Println(TokenPrefix + token)
+	err = s.rClient.Set(TokenPrefix + token, string(b), constant.LoginTokenExpiredTime)
 	return
 }
 
-func (s TokenService) getUserByToken(token string) (user orm.User, err error) {
+func (s TokenService) GetUserByToken(token string) (user orm.User, err error) {
 	// read from redis
-	userJson, err := s.rClient.Get(token)
+	userJson, err := s.rClient.Get(TokenPrefix + token)
 	if err != nil {
 		// if the key not exist, an error would be thrown, handle it as not login.
 		return

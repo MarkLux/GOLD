@@ -17,7 +17,7 @@ type UserRegisterRequest struct {
 
 type UserLoginRequest struct {
 	Email string `json:"email" binding:"required"`
-	Password string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
 // the user controller
@@ -31,15 +31,17 @@ func (c UserController) RegisterUser(ctx *gin.Context) {
 	err = ctx.BindJSON(&req)
 	if err != nil {
 		ctx.JSON(http.StatusOK, errors.GenValidationError())
+		return
 	}
 	user := orm.User{
 		Name: req.UserName,
-		Email: req.UserName,
+		Email: req.Email,
 		Password: req.Password,
 	}
 	id, err := c.userService.Register(user)
 	if err != nil {
 		ctx.JSON(http.StatusOK, err)
+		return
 	}
 	data := make(map[string]interface{})
 	data["userId"] = id
@@ -49,19 +51,36 @@ func (c UserController) RegisterUser(ctx *gin.Context) {
 	})
 }
 
-func (c UserController) LoginUser(ctx *gin.Context)  {
+func (c UserController) LoginUser(ctx *gin.Context) {
 	var req UserLoginRequest
 	var err error
 	err = ctx.BindJSON(&req)
 	if err != nil {
 		ctx.JSON(http.StatusOK, errors.GenValidationError())
+		return
 	}
-	token, err := c.userService.Login(req.Email, req.Password)
+	user, token, err := c.userService.Login(req.Email, req.Password)
 	if err != nil {
 		ctx.JSON(http.StatusOK, err)
+		return
 	}
 	data := make(map[string]interface{})
 	data["token"] = token
+	data["user"] = user
+	ctx.JSON(http.StatusOK, gin.H{
+		"code": 0,
+		"data": data,
+	})
+}
+
+func (c UserController) GetLoginUser(ctx *gin.Context) {
+	hasLogin, user := service.NeedLoginCheck(ctx)
+	if !hasLogin {
+		return
+	}
+	user.Password = ""
+	data := make(map[string]interface{})
+	data["user"] = user
 	ctx.JSON(http.StatusOK, gin.H{
 		"code": 0,
 		"data": data,

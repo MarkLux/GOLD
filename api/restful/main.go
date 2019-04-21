@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/MarkLux/GOLD/api/restful/controller"
+	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
@@ -15,11 +15,12 @@ func main() {
 
 	r.POST("/user/register", userController.RegisterUser)
 	r.POST("/user/login", userController.LoginUser)
+	r.GET("/user/current", userController.GetLoginUser)
 
 	r.Run(":8090")
 }
 
-// handle cors
+// handle cors middleware
 func Cors() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		method := c.Request.Method
