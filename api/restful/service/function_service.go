@@ -32,6 +32,15 @@ func (s FunctionService) CreateFunctionService(f *orm.FunctionService) (err erro
 	return
 }
 
+func (s FunctionService) ListFunctionService(page int, size int) (total int64, results []orm.FunctionService, err error) {
+	total, err = s.engine.Table("function_services").Count()
+	if err != nil {
+		return
+	}
+	err = s.engine.Limit(size, (page-1) * size).Find(&results)
+	return
+}
+
 func GetFunctionService() *FunctionService {
 	functionOnce.Do(func() {
 		functionInstance = &FunctionService {

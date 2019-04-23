@@ -20,6 +20,7 @@ func main() {
 	// function controller
 	functionController := controller.NewFunctionServiceController()
 	r.POST("/function/service", functionController.CreateFunctionService)
+	r.GET("/function/service/list", functionController.ListFunctionService)
 
 	r.Run(":8090")
 }

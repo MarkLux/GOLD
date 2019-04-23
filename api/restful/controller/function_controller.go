@@ -6,6 +6,7 @@ import (
 	"github.com/MarkLux/GOLD/api/restful/service"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 type CreateFunctionServiceRequest struct {
@@ -53,6 +54,38 @@ func (c FunctionServiceController) CreateFunctionService(ctx *gin.Context) {
 	}
 	data := make(map[string]interface{})
 	data["serviceId"] = f.Id
+	ctx.JSON(http.StatusOK, gin.H{
+		"code": 0,
+		"data": data,
+	})
+}
+
+func (c FunctionServiceController) ListFunctionService(ctx *gin.Context) {
+	page := 1
+	size := 10
+	var err error
+	pageStr := ctx.Query("page")
+	if pageStr == ""{
+		page, err = strconv.Atoi(pageStr)
+		if err != nil {
+			page = 1
+		}
+	}
+	sizeStr := ctx.Query("size")
+	if sizeStr == "" {
+		size, err = strconv.Atoi(sizeStr)
+		if err != nil {
+			size = 10
+		}
+	}
+	total, results, err := c.functionService.ListFunctionService(page, size)
+	if err != nil {
+		ctx.JSON(http.StatusOK, errors.GenUnknownError())
+		return
+	}
+	data := make(map[string]interface{})
+	data["results"] = results
+	data["total"] = total
 	ctx.JSON(http.StatusOK, gin.H{
 		"code": 0,
 		"data": data,
