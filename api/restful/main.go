@@ -10,12 +10,16 @@ func main() {
 	r := gin.Default()
 	r.Use(Cors())
 
-	// create controllers
+	// user controller
 	userController := controller.NewUserController()
 
 	r.POST("/user/register", userController.RegisterUser)
 	r.POST("/user/login", userController.LoginUser)
 	r.GET("/user/current", userController.GetLoginUser)
+
+	// function controller
+	functionController := controller.NewFunctionServiceController()
+	r.POST("/function/service", functionController.CreateFunctionService)
 
 	r.Run(":8090")
 }
