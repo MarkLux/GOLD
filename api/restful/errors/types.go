@@ -11,7 +11,7 @@ func (e RestError) Error() string {
 	return fmt.Sprintf("rest error, code: %d, msg: %s", e.Code, e.Message)
 }
 
-// 通用错误
+// common
 
 func GenUnknownError() RestError {
 	return RestError{500, "系统异常，未知错误"}
@@ -21,7 +21,7 @@ func GenValidationError() RestError {
 	return RestError{1001, "表单验证错误，请检查输入"}
 }
 
-// 用户相关
+// user-related
 
 func GenPwdError() RestError {
 	return RestError{2001, "密码错误"}
@@ -39,4 +39,8 @@ func GenNeedLoginError() RestError {
 	return RestError{2004, "需要登录"}
 }
 
-// 系统相关
+// function-service related
+
+func GenFunctionServiceExistedError() RestError {
+	return RestError{3001, "该服务名已被使用"}
+}

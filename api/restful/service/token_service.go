@@ -34,7 +34,7 @@ func (s TokenService) CreateToken(user *orm.User) (token string, err error) {
 	}
 	// save into redis
 	log.Println(TokenPrefix + token)
-	err = s.rClient.Set(TokenPrefix + token, string(b), constant.LoginTokenExpiredTime)
+	err = s.rClient.Set(TokenPrefix+token, string(b), constant.LoginTokenExpiredTime)
 	return
 }
 
