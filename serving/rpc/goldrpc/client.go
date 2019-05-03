@@ -14,7 +14,7 @@ type GoldRpcClient struct {
 	TimeOut    int64
 }
 
-func (client *GoldRpcClient) RequestSync(request *GoldRequest) (response *GoldResponse, err error) {
+func (client *GoldRpcClient) RequestSync(request *common.GoldRequest) (response *common.GoldResponse, err error) {
 	response = nil
 	// encode the data into json
 	jsonBytes, err := json.Marshal(request.Data)
@@ -48,7 +48,7 @@ func (client *GoldRpcClient) RequestSync(request *GoldRequest) (response *GoldRe
 	if err != nil {
 		return
 	}
-	response = &GoldResponse{
+	response = &common.GoldResponse{
 		Handler:   res.Data.Sender,
 		TimeStamp: res.Data.Timestamp,
 		Data: resMap,

@@ -35,7 +35,7 @@ func GetRemoteServiceWithTimeOut(serviceName string, timeout int64) (*GoldServic
 
 func (consumer *GoldServiceConsumer) Request(req map[string]interface{}) (rsp map[string]interface{}, err error) {
 	// 0. parseRequest
-	request := &goldrpc.GoldRequest{
+	request := &common.GoldRequest{
 		Invoker: common.GetGoldEnv().PodName,
 		TimeStamp: time.Now().Unix(),
 		Data: req,
