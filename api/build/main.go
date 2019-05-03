@@ -46,6 +46,7 @@ func main() {
 	bArgs["REPO_URL"] = &repoUrl
 	bArgs["REPO_NAME"] = &repoName
 	bArgs["BRANCH"] = &branchName
+	bArgs["COMMIT_ID"] = &sha
 
 	imgName := privateRegistry +"/hello-restful:" + sha
 

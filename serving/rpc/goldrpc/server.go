@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/MarkLux/GOLD/serving/common"
-	"github.com/MarkLux/GOLD/serving/wrapper/gold"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"log"
@@ -16,7 +15,7 @@ import (
 type GoldRpcServer struct {
 	BindPort string
 	ServiceName string
-	Function gold.ServiceFunction
+	Function common.ServiceFunction
 }
 
 // implement the RpcServer using biz handler
@@ -27,12 +26,12 @@ func (s *GoldRpcServer) Call(ctx context.Context, req *SyncRequest) (rsp *SyncRe
 	if err != nil {
 		return
 	}
-	goldReq := &GoldRequest{
+	goldReq := &common.GoldRequest{
 		Invoker: req.Data.Sender,
 		TimeStamp: req.Data.Timestamp,
 		Data: reqData,
 	}
-	goldRsp := &GoldResponse{}
+	goldRsp := &common.GoldResponse{}
 	err = s.Function.OnHandle(goldReq, goldRsp)
 	if err != nil {
 		// the result suggests that shall we continue to run the code.

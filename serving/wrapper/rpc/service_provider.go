@@ -4,7 +4,6 @@ import (
 	"github.com/MarkLux/GOLD/serving/common"
 	"github.com/MarkLux/GOLD/serving/rpc/goldrpc"
 	"github.com/MarkLux/GOLD/serving/wrapper/constant"
-	"github.com/MarkLux/GOLD/serving/wrapper/gold"
 )
 
 // interface
@@ -14,7 +13,7 @@ type ServiceProvider interface {
 
 type GoldServiceProvider struct {
 	server goldrpc.GoldRpcServer
-	Function gold.ServiceFunction
+	Function common.ServiceFunction
 }
 
 func (p *GoldServiceProvider) Serve() error {
@@ -26,6 +25,6 @@ func (p *GoldServiceProvider) Serve() error {
 	return p.server.Serve()
 }
 
-func NewServiceProvider(f gold.ServiceFunction) *GoldServiceProvider {
+func NewServiceProvider(f common.ServiceFunction) *GoldServiceProvider {
 	return &GoldServiceProvider{Function: f}
 }
