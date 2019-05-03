@@ -36,7 +36,7 @@ func (s *GoldRpcServer) Call(ctx context.Context, req *SyncRequest) (rsp *SyncRe
 	err = s.Function.OnHandle(goldReq, goldRsp)
 	if err != nil {
 		// the result suggests that shall we continue to run the code.
-		ctn := s.Function.onError(err)
+		ctn := s.Function.OnError(err)
 		if !ctn {
 			return
 		} else {
