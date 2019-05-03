@@ -11,7 +11,3 @@ type GoldResponse struct {
 	Data map[string]interface{}
 	TimeStamp int64
 }
-
-type GoldBizHandler interface {
-	Handle(request *GoldRequest, response *GoldResponse) error
-}

@@ -19,8 +19,12 @@ type UserModel struct {
 	Mail string `bson:"mail"`
 }
 
+func (s *GoldService) onInit() {
+	// do something here..
+}
+
 // the biz function
-func (s *GoldService) Handle(req *goldrpc.GoldRequest, rsp *goldrpc.GoldResponse) error {
+func (s *GoldService) onHandle(req *goldrpc.GoldRequest, rsp *goldrpc.GoldResponse) error {
 	// get data from request
 	userName := req.Data["name"].(string)
 
@@ -76,4 +80,9 @@ func (s *GoldService) Handle(req *goldrpc.GoldRequest, rsp *goldrpc.GoldResponse
 	}
 
 	return nil
+}
+
+func (s *GoldService) onError(err error) bool {
+	log.Println(err.Error())
+	return false
 }
