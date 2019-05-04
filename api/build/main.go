@@ -48,7 +48,7 @@ func main() {
 	bArgs["BRANCH"] = &branchName
 	bArgs["COMMIT_ID"] = &sha
 
-	imgName := privateRegistry +"/hello-restful:" + sha
+	imgName := privateRegistry +"/hello-service:" + sha
 
 	rsp, err :=cli.ImageBuild(ctx, f, docker.ImageBuildOptions{
 		// this param is only suggest the file name of dockerfile, not path

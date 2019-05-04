@@ -1,4 +1,4 @@
-FROM registry.cn-qingdao.aliyuncs.com/gold-faas/gold-faas-wrapper:0.3.beta
+FROM registry.cn-qingdao.aliyuncs.com/gold-faas/gold-faas-wrapper:0.4.beta
 
 # create work dir
 WORKDIR /home
