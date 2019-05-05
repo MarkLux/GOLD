@@ -12,7 +12,7 @@ var once sync.Once
 var clientInstance *kubernetes.Clientset
 
 func buildClient() {
-	config, err := clientcmd.BuildConfigFromFlags("", &constant.KubeConfigPath)
+	config, err := clientcmd.BuildConfigFromFlags("", constant.KubeConfigPath)
 	if err != nil {
 		log.Fatal("fail to init k8s client", err)
 	}
