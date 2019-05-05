@@ -31,12 +31,12 @@ func NewGoldRedisClient() (*GoldRedisClient, error) {
 		// why can't I use a single restful name?
 		// fix: do not use hard codec
 		Addrs: []string {
-			"redis-app-0.redis-restful.gold.svc.cluster.local:6379",
-			"redis-app-1.redis-restful.gold.svc.cluster.local:6379",
-			"redis-app-2.redis-restful.gold.svc.cluster.local:6379",
-			"redis-app-3.redis-restful.gold.svc.cluster.local:6379",
-			"redis-app-4.redis-restful.gold.svc.cluster.local:6379",
-			"redis-app-5.redis-restful.gold.svc.cluster.local:6379",
+			"redis-app-0.redis-service.gold.svc.cluster.local:6379",
+			"redis-app-1.redis-service.gold.svc.cluster.local:6379",
+			"redis-app-2.redis-service.gold.svc.cluster.local:6379",
+			"redis-app-3.redis-service.gold.svc.cluster.local:6379",
+			"redis-app-4.redis-service.gold.svc.cluster.local:6379",
+			"redis-app-5.redis-service.gold.svc.cluster.local:6379",
 		},
 	})
 	// test conn
