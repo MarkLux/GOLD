@@ -29,31 +29,36 @@ type User struct {
 }
 
 type FunctionService struct {
-	Id int64
-	CreatorId int64
-	CreatorName string
-	ServiceName string
-	GitRemote string
-	GitBranch string
-	GitHead string
-	Status string
-	LastOperation int64
-	AddOn string
-	MinInstance int
-	MaxInstance int
+	Id int64 `json:"id"`
+	CreatorId int64 `json:"creatorId"`
+	CreatorName string `json:"creatorName"`
+	ServiceName string `json:"serviceName"`
+	GitRepo string `json:"gitRepo"`
+	GitBranch string `json:"gitBranch"`
+	GitHead string `json:"gitHead"`
+	GitMaintainer string `json:"gitMaintainer"`
+	Status string `json:"statue"`
+	LastOperation int64 `json:"lastOperation"`
+	AddOn string `json:"addOn"`
+	MinInstance int `json:"minInstance"`
+	MaxInstance int `json:"maxInstance"`
 	BaseDO `xorm:"extends"`
 }
 
 type OperateLogs struct {
-	Id int64
-	ServiceId int64
-	OperatorId int64
-	Type string
-	Start int64
-	Update int64
-	End int64
-	CurrentAction string
-	Log string
+	Id int64 `json:"id"`
+	ServiceId int64 `json:"serviceId"`
+	OperatorId int64 `json:"operatorId"`
+	Type string `json:"type"`
+	Start int64 `json:"start"`
+	Update int64 `json:"update"`
+	End int64 `json:"end"`
+	CurrentAction string `json:"currentAction"`
+	Log string `json:"log"`
+	OriginBranch string `json:"originBranch"`
+	OriginVersion string `json:"originVersion"`
+	TargetBranch string `json:"targetBranch"`
+	TargetVersion string `json:"targetVersion"`
 	BaseDO `xorm:"extends"`
 }
 

@@ -10,17 +10,18 @@ import (
 )
 
 type CreateFunctionServiceRequest struct {
-	ServiceName string `json:"serviceName" binding:"required"`
-	GitRemote   string `json:"gitRemote" binding:"required"`
-	GitBranch   string `json:"gitBranch" binding:"required"`
-	GitHead     string `json:"gitHead"`
-	MinInstance int    `json:"minInstance" binding:"required"`
-	MaxInstance int    `json:"maxInstance" binding:"required"`
+	ServiceName   string `json:"serviceName" binding:"required"`
+	GitRepo       string `json:"gitRepo" binding:"required"`
+	GitBranch     string `json:"gitBranch" binding:"required"`
+	GitMaintainer string `json:"gitMaintainer" binding:"required"`
+	GitHead       string `json:"gitHead"`
+	MinInstance   int    `json:"minInstance" binding:"required"`
+	MaxInstance   int    `json:"maxInstance" binding:"required"`
 }
 
 type FunctionServiceController struct {
 	functionService *service.FunctionService
-	tokenService *service.TokenService
+	tokenService    *service.TokenService
 }
 
 func (c FunctionServiceController) CreateFunctionService(ctx *gin.Context) {
@@ -38,14 +39,15 @@ func (c FunctionServiceController) CreateFunctionService(ctx *gin.Context) {
 	}
 	// create do
 	f := orm.FunctionService{
-		CreatorId: user.Id,
-		CreatorName: user.Name,
-		ServiceName: req.ServiceName,
-		GitRemote: req.GitRemote,
-		GitBranch: req.GitBranch,
-		GitHead: req.GitHead,
-		MinInstance: req.MinInstance,
-		MaxInstance: req.MaxInstance,
+		CreatorId:     user.Id,
+		CreatorName:   user.Name,
+		ServiceName:   req.ServiceName,
+		GitRepo:       req.GitRepo,
+		GitBranch:     req.GitBranch,
+		GitMaintainer: req.GitMaintainer,
+		GitHead:       req.GitHead,
+		MinInstance:   req.MinInstance,
+		MaxInstance:   req.MaxInstance,
 	}
 	err = c.functionService.CreateFunctionService(&f)
 	if err != nil {
@@ -65,7 +67,7 @@ func (c FunctionServiceController) ListFunctionService(ctx *gin.Context) {
 	size := 10
 	var err error
 	pageStr := ctx.Query("page")
-	if pageStr == ""{
+	if pageStr == "" {
 		page, err = strconv.Atoi(pageStr)
 		if err != nil {
 			page = 1
@@ -95,6 +97,6 @@ func (c FunctionServiceController) ListFunctionService(ctx *gin.Context) {
 func NewFunctionServiceController() FunctionServiceController {
 	return FunctionServiceController{
 		functionService: service.GetFunctionService(),
-		tokenService: service.GetTokenService(),
+		tokenService:    service.GetTokenService(),
 	}
 }
