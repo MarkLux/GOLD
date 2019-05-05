@@ -1,12 +1,11 @@
 # The custom basic envirnoment for golang
-FROM centos
+FROM alpine
 LABEL maintainer="MarkLux"
 # install dependencies
-RUN yum install -y \
+RUN apk add -y \
     gcc g++ \
     git \
-    wget \
-    && yum clean all
+    wget
 # create work dir
 RUN mkdir -p /home/go
 WORKDIR /home/go
