@@ -2,7 +2,7 @@
 FROM centos
 LABEL maintainer="MarkLux"
 # install dependencies
-RUN yun install -y \
+RUN yum install -y \
     gcc g++ \
     git \
     wget \
