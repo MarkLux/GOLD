@@ -1,4 +1,5 @@
-FROM registry.cn-qingdao.aliyuncs.com/gold-faas/gold-base-env-golang:1.0
+FROM golang:1.12-alpine
+
 
 # create work dir
 WORKDIR /home
