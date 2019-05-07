@@ -1,4 +1,4 @@
-FROM registry.cn-qingdao.aliyuncs.com/gold-faas/gold-base-env-golang:1.0
+FROM golang:1.12-alpine
 
 # create work dir
 WORKDIR /home
@@ -6,7 +6,7 @@ WORKDIR /home
 # install dependency
 
 # pull the code
-RUN git clone https://github.com/MarkLux/GOLD
+RUN apk add git && git clone https://github.com/MarkLux/GOLD
 
 # build the project
 WORKDIR /home/GOLD/eventing/http

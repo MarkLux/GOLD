@@ -4,7 +4,7 @@ const (
 	DataBaseDriver = "mysql"
 	DataBaseName = "gold"
 	DataBaseUser = "root"
-	DataBasePwd = "qwe123"
+	DataBasePwd = "root"
 
 	RedisAddr = "localhost:6379"
 
@@ -14,7 +14,7 @@ const (
 
 	DockerfilePath = "/Users/lumin/Projects/Go/GOLD/api/build/tmp.tar"
 
-	DockerRegistry = "gold-registry:8099"
+	DockerRegistry = "marklux.cn:8099"
 )
 
 // service status

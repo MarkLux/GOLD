@@ -55,6 +55,7 @@ type OperateLogs struct {
 	End int64 `json:"end"`
 	CurrentAction string `json:"currentAction"`
 	Log string `json:"log"`
+	Reason string `json:"reason"`
 	OriginBranch string `json:"originBranch"`
 	OriginVersion string `json:"originVersion"`
 	TargetBranch string `json:"targetBranch"`

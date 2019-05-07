@@ -8,15 +8,20 @@ import (
 	"github.com/MarkLux/GOLD/api/restful/orm"
 	docker "github.com/docker/docker/api/types"
 	"golang.org/x/net/context"
-	"io/ioutil"
 	"log"
 	"os"
-	"time"
 )
 
-func (s FunctionService) buildImage(f orm.FunctionService, buildLog orm.OperateLogs) (err error) {
+type Action struct {
+	Type string
+	FunctionService orm.FunctionService
+	TargetBranch string
+	TargetVersion string
+	Operator orm.User
+}
+
+func (s FunctionService) buildImage(f orm.FunctionService, buildLog *orm.OperateLogs) (err error) {
 	if f.GitHead == "" {
-		// default use last commit as the version
 		gitCli := github.GithubClient{Maintainer: f.GitMaintainer, Repo: f.GitRepo}
 		f.GitHead = gitCli.GetLastCommitSha(f.GitBranch)
 	}
@@ -26,7 +31,6 @@ func (s FunctionService) buildImage(f orm.FunctionService, buildLog orm.OperateL
 		err = errors.GenUnknownError()
 		return
 	}
-	s.updateOperate(buildLog.Id, "BUILDING", buildLog.Log, false)
 	// build args
 	bArgs := make(map[string]*string)
 	gitUrl := fmt.Sprintf("https://github.com/%s/%s", f.GitMaintainer, f.GitRepo)
@@ -37,7 +41,7 @@ func (s FunctionService) buildImage(f orm.FunctionService, buildLog orm.OperateL
 	// open build context
 	bContext, err :=  os.Open(constant.DockerfilePath)
 	if err != nil {
-		s.failOperate(buildLog.Id, "fail to open docker context")
+		_ = s.opService.FailOperateLog(buildLog, "fail to open docker context")
 		log.Println("fail to open docker context, ", err)
 		err = errors.GenUnknownError()
 		return
@@ -53,60 +57,31 @@ func (s FunctionService) buildImage(f orm.FunctionService, buildLog orm.OperateL
 		Tags: []string{imgName},
 	})
 	if err != nil {
-		s.failOperate(buildLog.Id, "fail to execute build command")
+		_ = s.opService.FailOperateLog(buildLog, "fail to execute build command")
 		log.Println("fail to image build, ", err)
 		err = errors.GenUnknownError()
 		return
 	}
 	defer rsp.Body.Close()
-	// record the output
-	outputBytes, _ := ioutil.ReadAll(rsp.Body)
-	output := string(outputBytes)
-	output += "\n build succeed, start pushing...\n"
-	// build succeed, update log
-	s.updateOperate(buildLog.Id, "PUSHING", output, false)
+	err = s.opService.ContinueOperateLog(buildLog, ActionImgBuilding, rsp.Body, true)
+	if err != nil {
+		log.Println("fail to record output, ", err)
+		// TODO check if the build succeed? there can be no api, maybe we have to read the output
+	}
 	// start pushing
 	pRsp, err := s.dockerCli.ImagePush(context.Background(), imgName, docker.ImagePushOptions{
 		RegistryAuth: "gold",
 	})
 	if err != nil {
-		output += fmt.Sprintf("\n fail to push image, get error: %s", err)
-		s.failOperate(buildLog.Id, output)
+		_ = s.opService.FailOperateLog(buildLog, "fail to push image")
 		log.Println("fail to push image", err)
 	}
 	defer pRsp.Close()
-	pushOutputBytes, _ := ioutil.ReadAll(pRsp)
-	output += string(pushOutputBytes)
-	s.updateOperate(buildLog.Id, "PUSHED", output, false)
-
+	_ = s.opService.ContinueOperateLog(buildLog, ActionImgPushing, pRsp, true)
 	return nil
 }
 
 func (s FunctionService) updateStatus(fId int64, status string) error {
 	_, err := s.engine.Id(fId).Cols("status").Update(&orm.FunctionService{Status: status})
 	return err
-}
-
-func (s FunctionService) failOperate(opId int64, log string) {
-	current := time.Now().Unix()
-	s.engine.Table(orm.OperateLogs{}).
-		ID(opId).Update(&orm.OperateLogs{
-		CurrentAction: "FAILED",
-		Log: log,
-		End: current,
-		Update: current,
-	})
-}
-
-func (s FunctionService) updateOperate(opId int64, act string, log string, end bool) {
-	current := time.Now().Unix()
-	update := &orm.OperateLogs{
-		CurrentAction: act,
-		Update: current,
-		Log: log,
-	}
-	if end {
-		update.End = current
-	}
-	s.engine.Table(orm.OperateLogs{}).ID(opId).Update(update)
 }

@@ -1,7 +1,6 @@
 package service
 
 import (
-	"github.com/MarkLux/GOLD/api/restful/constant"
 	"github.com/MarkLux/GOLD/api/restful/docker"
 	"github.com/MarkLux/GOLD/api/restful/errors"
 	"github.com/MarkLux/GOLD/api/restful/k8s"
@@ -9,8 +8,8 @@ import (
 	"github.com/docker/docker/client"
 	"github.com/go-xorm/xorm"
 	"k8s.io/client-go/kubernetes"
+	"log"
 	"sync"
-	"time"
 )
 
 // instance for function service
@@ -18,17 +17,11 @@ type FunctionService struct {
 	engine       *xorm.Engine
 	dockerCli    *client.Client
 	k8sCli		 *kubernetes.Clientset
+	opService 	 *OperateLogService
 }
 
 var functionInstance *FunctionService
 var functionOnce sync.Once
-
-type UpdateAction struct {
-	FunctionService orm.FunctionService
-	TargetBranch string
-	TargetVersion string
-	Operator orm.User
-}
 
 func (s FunctionService) CreateFunctionService(f *orm.FunctionService) (err error)  {
 	// check if the function existed
@@ -46,28 +39,23 @@ func (s FunctionService) CreateFunctionService(f *orm.FunctionService) (err erro
 	return
 }
 
-func (s FunctionService) PublishFunctionService(action UpdateAction) int64 {
-	operateLog := &orm.OperateLogs{
-		ServiceId: action.FunctionService.Id,
-		OperatorId: action.Operator.Id,
-		Type: constant.OperatePublish,
-		Start: time.Now().Unix(),
-		OriginBranch: action.FunctionService.GitBranch,
-		OriginVersion: action.FunctionService.GitHead,
-		TargetBranch: action.TargetBranch,
-		TargetVersion: action.TargetVersion,
-		CurrentAction: "START",
+func (s FunctionService) PublishFunctionService(action Action) (opId int64, err error) {
+	opLog, err := s.opService.CreateOperateLogService(action)
+	if err != nil {
+		log.Println("fail to create opLog, ", err)
+		err = errors.GenUnknownError()
+		return
 	}
-	s.engine.Insert(operateLog)
-	s.engine.Table(orm.FunctionService{}).
-		ID(action.FunctionService.Id).Cols("last_operation").
-		Update(map[string]interface{}{"last_operation": operateLog.Id})
 	// update function service
 	f := action.FunctionService
 	f.GitHead = action.TargetVersion
 	f.GitBranch = action.TargetBranch
-	s.buildImage(f, *operateLog)
-	return operateLog.Id
+	opId = opLog.Id
+	err = s.buildImage(f, opLog)
+	if err != nil {
+		log.Println("fail to build Image, ", err)
+	}
+	return
 }
 
 func (s FunctionService) ListFunctionService(page int, size int) (total int64, results []orm.FunctionService, err error) {
@@ -93,6 +81,7 @@ func GetFunctionService() *FunctionService {
 			engine: orm.GetOrmEngine(),
 			dockerCli: docker.GetClient(),
 			k8sCli: k8s.GetClient(),
+			opService: GetOperateService(),
 		}
 	})
 	return functionInstance

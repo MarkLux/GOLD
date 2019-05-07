@@ -12,11 +12,12 @@ func main() {
 		Id: 1,
 		Name: "marklux",
 	}
-	act := service.UpdateAction{
+	act := service.Action{
 		FunctionService: f,
 		TargetBranch: "master",
-		TargetVersion: "",
+		TargetVersion: "e37a0171a7a253ecaa57d7b811e11a797d9ba3f4",
 		Operator: u,
+		Type: "PUBLISH",
 	}
 	s.PublishFunctionService(act)
 }
