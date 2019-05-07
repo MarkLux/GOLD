@@ -10,11 +10,13 @@ const (
 
 	LoginTokenExpiredTime = 10800000
 
+	RpcPort = 8080
+
 	KubeConfigPath = "/Users/lumin/.kube/config"
-
 	DockerfilePath = "/Users/lumin/Projects/Go/GOLD/api/build/tmp.tar"
-
 	DockerRegistry = "marklux.cn:8099"
+	GoldRegistry = "gold-registry:5000"
+	GoldNameSpace = "gold"
 )
 
 // service status
@@ -29,6 +31,14 @@ const (
 	ServiceStatusRollBackFail = "ROLL_BACK_FAIL"
 	ServiceStatusRollBacked = "ROLL_BACKED"
 	ServiceStatusDeleted = "DELETED"
+)
+
+// hpa limits
+const (
+	LimitCpu = "25m"
+	LimitMem = "128Mi"
+	RequestCpu = "5m"
+	RequestMem = "64Mi"
 )
 
 // operate types

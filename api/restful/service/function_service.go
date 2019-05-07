@@ -55,6 +55,8 @@ func (s FunctionService) PublishFunctionService(action Action) (opId int64, err 
 	if err != nil {
 		log.Println("fail to build Image, ", err)
 	}
+	// check if the service existed ?
+	err = s.initK8sService(f, opLog)
 	return
 }
 

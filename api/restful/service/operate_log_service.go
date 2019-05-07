@@ -15,6 +15,7 @@ const (
 	ActionStart       = "START"
 	ActionImgBuilding = "IMG_BUILDING"
 	ActionImgPushing  = "IMG_PUSHING"
+	ActionIniting 	  = "INITING"
 	ActionPublishing  = "PUBLISHING"
 	ActionRollBacking = "ROLLBACKING"
 	ActionFinish      = "FINISH"
@@ -95,9 +96,9 @@ func (s OperateLogService) ContinueOperateLog(opLog *orm.OperateLogs, currentAct
 		fullOutput += "\n"
 	}
 	// rewrite into db
-	updateOutput := opLog.Log + fullOutput
+	opLog.Log += fullOutput
 	_, err = s.engine.Table(orm.OperateLogs{}).ID(opLog.Id).Update(&orm.OperateLogs{
-		Log: updateOutput,
+		Log: opLog.Log,
 		Update: time.Now().Unix(),
 	})
 	if err != nil {
