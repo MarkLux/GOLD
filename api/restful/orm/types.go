@@ -37,7 +37,8 @@ type FunctionService struct {
 	GitBranch string `json:"gitBranch"`
 	GitHead string `json:"gitHead"`
 	GitMaintainer string `json:"gitMaintainer"`
-	Status string `json:"statue"`
+	Status string `json:"status"`
+	Published int `json:"published"`
 	LastOperation int64 `json:"lastOperation"`
 	AddOn string `json:"addOn"`
 	MinInstance int `json:"minInstance"`

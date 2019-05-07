@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/MarkLux/GOLD/api/restful/constant"
 	"github.com/MarkLux/GOLD/api/restful/docker"
 	"github.com/MarkLux/GOLD/api/restful/errors"
 	"github.com/MarkLux/GOLD/api/restful/k8s"
@@ -51,13 +52,22 @@ func (s FunctionService) PublishFunctionService(action Action) (opId int64, err 
 	f.GitHead = action.TargetVersion
 	f.GitBranch = action.TargetBranch
 	opId = opLog.Id
-	//err = s.buildImage(f, opLog)
-	// check if the service existed ?
-	err = s.initK8sService(f, opLog)
+	err = s.buildImage(f, opLog)
 	if err != nil {
-		log.Println("fail to init k8s service ", err)
+		_ = s.updateStatus(f.Id, constant.ServiceStatusImageBuildFail)
+		log.Println("fail to buildImage")
 		return
 	}
+	err = s.pushImage(f, opLog)
+	if f.Published == 0 {
+		// first time
+		err = s.initK8sService(f, opLog)
+		if err != nil {
+			log.Println("fail to init k8s service ", err)
+			return
+		}
+	}
+
 	s.opService.FinishOperateLog(opLog)
 	return
 }

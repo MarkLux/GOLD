@@ -65,7 +65,7 @@ func (s OperateLogService) CreateOperateLogService(action Action) (opLog *orm.Op
 	return
 }
 
-func (s OperateLogService) ContinueOperateLog(opLog *orm.OperateLogs, currentAction string, output io.Reader, hasOutput bool) (err error) {
+func (s OperateLogService) ContinueOperateLog(opLog *orm.OperateLogs, currentAction string, output io.Reader, hasOutput bool) (lastOutput string, err error) {
 	// update operate log
 	current := time.Now().Unix()
 	updateLog := &orm.OperateLogs{
