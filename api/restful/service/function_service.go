@@ -51,12 +51,14 @@ func (s FunctionService) PublishFunctionService(action Action) (opId int64, err 
 	f.GitHead = action.TargetVersion
 	f.GitBranch = action.TargetBranch
 	opId = opLog.Id
-	err = s.buildImage(f, opLog)
-	if err != nil {
-		log.Println("fail to build Image, ", err)
-	}
+	//err = s.buildImage(f, opLog)
 	// check if the service existed ?
 	err = s.initK8sService(f, opLog)
+	if err != nil {
+		log.Println("fail to init k8s service ", err)
+		return
+	}
+	s.opService.FinishOperateLog(opLog)
 	return
 }
 

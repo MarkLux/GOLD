@@ -13,6 +13,7 @@ import (
 	asV1 "k8s.io/api/autoscaling/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	"k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/util/intstr"
 	"log"
 	"os"
 )
@@ -105,7 +106,7 @@ func (s FunctionService) initK8sService(f orm.FunctionService, opLog *orm.Operat
 	container := coreV1.Container{
 		Name:  f.ServiceName,
 		Image: img,
-		Ports: []coreV1.ContainerPort{{Name: "rpcPort", ContainerPort: constant.RpcPort}},
+		Ports: []coreV1.ContainerPort{{Name: "rpc", ContainerPort: constant.RpcPort}},
 		Resources: coreV1.ResourceRequirements{
 			Limits:   coreV1.ResourceList{"cpu": resource.MustParse(constant.LimitCpu), "memory": resource.MustParse(constant.LimitMem)},
 			Requests: coreV1.ResourceList{"cpu": resource.MustParse(constant.RequestCpu), "memory": resource.MustParse(constant.RequestMem)},
@@ -114,6 +115,7 @@ func (s FunctionService) initK8sService(f orm.FunctionService, opLog *orm.Operat
 	// default replicas num: min instance.
 	replicas := int32(f.MinInstance)
 	dp.Spec.Replicas = &replicas
+	dp.Spec.Selector = &v1.LabelSelector{MatchLabels: labelMap}
 	dp.Spec.Template.Labels = labelMap
 	dp.Spec.Template.Spec.Containers = []coreV1.Container{container}
 	_, err = s.k8sCli.AppsV1().Deployments(constant.GoldNameSpace).Create(dp)
@@ -122,6 +124,7 @@ func (s FunctionService) initK8sService(f orm.FunctionService, opLog *orm.Operat
 		_ = s.opService.FailOperateLog(opLog, "fail to create deployment")
 		return
 	}
+	log.Println("created deployment ", f.ServiceName)
 	// 2. create k8s service
 	svc := &coreV1.Service{}
 	svc.Name = f.ServiceName
@@ -130,16 +133,17 @@ func (s FunctionService) initK8sService(f orm.FunctionService, opLog *orm.Operat
 	svc.Spec.Selector = labelMap
 	svc.Spec.Type = coreV1.ServiceTypeNodePort
 	svc.Spec.Ports = []coreV1.ServicePort{{
-		Name:       "rpcPort",
+		Name:       "rpc",
 		Protocol:   coreV1.ProtocolTCP,
 		Port:       constant.RpcPort,
-		TargetPort: constant.RpcPort,
+		TargetPort: intstr.IntOrString{IntVal: constant.RpcPort},
 	}}
 	_, err = s.k8sCli.CoreV1().Services(constant.GoldNameSpace).Create(svc)
 	if err != nil {
 		log.Println("fail to create service, ", err)
 		_ = s.opService.FailOperateLog(opLog, "fail to create service")
 	}
+	log.Println("created service ", f.ServiceName)
 	// 3. config HPA
 	hpa := &asV1.HorizontalPodAutoscaler{}
 	hpa.Name = f.ServiceName
@@ -152,14 +156,16 @@ func (s FunctionService) initK8sService(f orm.FunctionService, opLog *orm.Operat
 	}
 	minIns := int32(f.MinInstance)
 	maxIns := int32(f.MaxInstance)
+	cpuPercent := int32(10)
 	hpa.Spec.MinReplicas = &minIns
 	hpa.Spec.MaxReplicas = maxIns
+	hpa.Spec.TargetCPUUtilizationPercentage = &cpuPercent
 	_, err = s.k8sCli.AutoscalingV1().HorizontalPodAutoscalers(constant.GoldNameSpace).Create(hpa)
 	if err != nil {
 		log.Println("fail to attach hpa, ", err)
 		_ = s.opService.FailOperateLog(opLog, "fail to create hpa")
 	}
-
+	log.Println("attached hpa ", f.ServiceName)
 	return
 }
 
