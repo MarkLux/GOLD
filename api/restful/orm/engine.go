@@ -16,7 +16,7 @@ var once sync.Once
 func InitOrmEngine() {
 	once.Do(func() {
 		// for mysql only
-		dsn := "root:qwe123@tcp(127.0.0.1:3306)/gold?charset=utf8"
+		dsn := "root:root@tcp(127.0.0.1:3306)/gold?charset=utf8"
 		var err error
 		engine, err = xorm.NewEngine(constant.DataBaseDriver, dsn)
 		if err != nil {

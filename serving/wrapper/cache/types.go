@@ -24,5 +24,3 @@ type SerializeErr struct {
 func (e *SerializeErr) Error() string {
 	return fmt.Sprintf("fail to serialize %v into json.", e.Target)
 }
-
-

@@ -21,6 +21,10 @@ func GenValidationError() RestError {
 	return RestError{1001, "表单验证错误，请检查输入"}
 }
 
+func GenInvalidParam() RestError {
+	return RestError{1002, "参数异常"}
+}
+
 // user-related
 
 func GenPwdError() RestError {

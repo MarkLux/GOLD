@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: redis-restful
+  name: redis-service
   namespace: gold
   labels:
     app: redis
