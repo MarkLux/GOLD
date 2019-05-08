@@ -14,14 +14,15 @@ import (
 
 const (
 	maintainer = "MarkLux"
-	privateRegistry = "gold-registry:8099"
+	privateRegistry = "marklux.cn:8099"
 )
 
 func main() {
 
-	repoUrl := "https://github.com/MarkLux/GOLD-Bootstrap"
-	repoName := "GOLD-Bootstrap"
-	branchName := "demo"
+
+	//repoUrl := "https://github.com/MarkLux/GOLD-Bootstrap"
+	//repoName := "GOLD-Bootstrap"
+	//branchName := "demo"
 
 	// create docker client
 
@@ -31,6 +32,7 @@ func main() {
 		panic(err)
 	}
 
+	/*
 	f , err:= os.Open("/Users/lumin/Projects/Go/GOLD/api/build/tmp.tar")
 	if err != nil {
 		panic(err)
@@ -68,6 +70,10 @@ func main() {
 	_, err = io.Copy(os.Stdout, rsp.Body)
 
 	fmt.Println("build completed, start push.")
+
+	*/
+
+	imgName := "marklux.cn:8099/alpine:0.2"
 
 	pRsp, err := cli.ImagePush(ctx, imgName, docker.ImagePushOptions{
 		RegistryAuth: "gold",

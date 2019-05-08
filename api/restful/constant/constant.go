@@ -24,6 +24,8 @@ const (
 	ServiceStatusCreated = "CREATED"
 	ServiceStatusImageBuilding = "IMAGE_BUILDING"
 	ServiceStatusImageBuildFail = "IMAGE_BUILD_FAIL"
+	ServiceStatusImagePushing = "IMAGE_PUSHING"
+	ServiceStatusImagePushFail = "IMAGE_PUSH_FAIL"
 	ServiceStatusPublishing = "PUBLISHING"
 	ServiceStatusPublishFail = "PUBLISH_FAIL"
 	ServiceStatusPublished = "PUBLISHED"

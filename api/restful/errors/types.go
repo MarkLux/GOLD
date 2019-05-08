@@ -12,9 +12,12 @@ func (e RestError) Error() string {
 }
 
 // common
-
 func GenUnknownError() RestError {
 	return RestError{500, "系统异常，未知错误"}
+}
+
+func GenSystemError(msg string) RestError {
+	return RestError{501, msg}
 }
 
 func GenValidationError() RestError {
