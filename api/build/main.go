@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"github.com/docker/docker/client"
@@ -13,15 +14,15 @@ import (
 )
 
 const (
-	maintainer = "MarkLux"
-	privateRegistry = "gold-registry:8099"
+	maintainer = "Yipartner"
+	privateRegistry = "marklux.cn:8099"
 )
 
 func main() {
 
-	repoUrl := "https://github.com/MarkLux/GOLD-Bootstrap"
+	repoUrl := "https://github.com/Yipartner/GOLD-Bootstrap"
 	repoName := "GOLD-Bootstrap"
-	branchName := "demo"
+	branchName := "master"
 
 	// create docker client
 
@@ -31,13 +32,13 @@ func main() {
 		panic(err)
 	}
 
-	f , err:= os.Open("/Users/lumin/Projects/Go/GOLD/api/build/tmp.tar")
+	f , err:= os.Open("/Users/hanxiao/WorkPlace/GOLD/api/build/tmp.tar")
 	if err != nil {
 		panic(err)
 	}
 
 	// github api
-	sha, e := getLatestCommitSha(repoName, maintainer, "demo")
+	sha, e := getLatestCommitSha(repoName, maintainer, "master")
 	if e != nil {
 		panic(e)
 	}
@@ -65,18 +66,31 @@ func main() {
 	}
 
 	defer rsp.Body.Close()
-	_, err = io.Copy(os.Stdout, rsp.Body)
 
-	fmt.Println("build completed, start push.")
-
-	pRsp, err := cli.ImagePush(ctx, imgName, docker.ImagePushOptions{
-		RegistryAuth: "gold",
-	})
-	if err != nil {
-		panic(err)
+	rspReader := bufio.NewReader(rsp.Body)
+	// save last line of rsp.Body
+	lineStr := ""
+	for {
+		line, _, err := rspReader.ReadLine()
+		if err == io.EOF {
+			break
+		}
+		lineStr = string(line)
 	}
-	defer pRsp.Close()
-	_, err = io.Copy(os.Stdout, pRsp)
+	// judge the building's result
+	if lineStr[0:18] == "{\"stream\":\"Success" {
+		fmt.Println("build completed, start push.")
+		pRsp, err := cli.ImagePush(ctx, imgName, docker.ImagePushOptions{
+			RegistryAuth: "gold",
+		})
+		if err != nil {
+			panic(err)
+		}
+		defer pRsp.Close()
+		_, err = io.Copy(os.Stdout, pRsp)
+	}else {
+		fmt.Println("build error")
+	}
 }
 
 func getLatestCommitSha(repoName string, maintainer string, branch string) (sha string, err error) {
