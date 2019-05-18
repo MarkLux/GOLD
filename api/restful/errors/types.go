@@ -46,8 +46,16 @@ func GenNeedLoginError() RestError {
 	return RestError{2004, "需要登录"}
 }
 
+func GenPermissionDeniedError() RestError {
+	return RestError{2005, "权限不足"}
+}
+
 // function-service related
 
 func GenFunctionServiceExistedError() RestError {
 	return RestError{3001, "该服务名已被使用"}
+}
+
+func GenFunctionNotFoundError() RestError {
+	return RestError{3002, "指定服务不存在"}
 }

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"github.com/MarkLux/GOLD/api/restful/constant"
 	"github.com/MarkLux/GOLD/api/restful/errors"
 	"github.com/MarkLux/GOLD/api/restful/orm"
 	"github.com/MarkLux/GOLD/api/restful/service"
@@ -17,6 +18,12 @@ type CreateFunctionServiceRequest struct {
 	GitHead       string `json:"gitHead"`
 	MinInstance   int    `json:"minInstance" binding:"required"`
 	MaxInstance   int    `json:"maxInstance" binding:"required"`
+}
+
+type PublishFunctionServiceRequest struct {
+	FunctionId int64 `json:"functionId" binding:"required"`
+	TargetBranch string `json:"targetBranch" binding:"required"`
+	TargetVersion string `json:"targetVersion" binding:"required"`
 }
 
 type FunctionServiceController struct {
@@ -88,6 +95,54 @@ func (c FunctionServiceController) ListFunctionService(ctx *gin.Context) {
 	data := make(map[string]interface{})
 	data["results"] = results
 	data["total"] = total
+	ctx.JSON(http.StatusOK, gin.H{
+		"code": 0,
+		"data": data,
+	})
+}
+
+func (c FunctionServiceController) PublishFunctionService(ctx *gin.Context) {
+	var req PublishFunctionServiceRequest
+	var err error
+	err = ctx.BindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusOK, errors.GenValidationError())
+		return
+	}
+	// check login user
+	hasLogin, user := service.NeedLoginCheck(ctx)
+	if !hasLogin {
+		return
+	}
+	f := c.functionService.GetFunctionService(req.FunctionId)
+	if f == nil {
+		ctx.JSON(http.StatusOK, errors.GenFunctionNotFoundError())
+		return
+	}
+	// check owner
+	if user.Role != constant.RoleAdmin && user.Id != f.CreatorId {
+		ctx.JSON(http.StatusOK, errors.GenPermissionDeniedError())
+		return
+	}
+
+	publishAction := service.Action {
+		Type: "PUBLISH",
+		Operator: *user,
+		FunctionService: *f,
+		TargetBranch: req.TargetBranch,
+		TargetVersion: req.TargetVersion,
+	}
+
+	opId, err := c.functionService.PublishFunctionService(publishAction)
+
+	if err != nil {
+		ctx.JSON(http.StatusOK, errors.GenSystemError(err.Error()))
+		return
+	}
+
+	data := make(map[string]interface{})
+	data["log_id"] = opId
+
 	ctx.JSON(http.StatusOK, gin.H{
 		"code": 0,
 		"data": data,

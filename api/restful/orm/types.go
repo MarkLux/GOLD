@@ -1,6 +1,8 @@
 package orm
 
-import "time"
+import (
+	"time"
+)
 
 type BaseDO struct {
 	CreatedAt int64 `json:"createdAt"`
@@ -23,6 +25,7 @@ type User struct {
 	Id int64 `json:"id"`
 	Name string `json:"name"`
 	Email string `json:"email"`
+	Role  string `json:"role"`
 	Password string `json:"password"`
 	AddOn string `json:"addOn"`
 	BaseDO `xorm:"extends"`

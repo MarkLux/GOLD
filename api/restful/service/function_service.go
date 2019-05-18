@@ -100,12 +100,12 @@ func (s FunctionService) ListFunctionService(page int, size int) (total int64, r
 	return
 }
 
-func (s FunctionService) GetFunctionService(id int64) orm.FunctionService {
+func (s FunctionService) GetFunctionService(id int64) *orm.FunctionService {
 	f := &orm.FunctionService{
 		Id: id,
 	}
 	s.engine.Get(f)
-	return *f
+	return f
 }
 
 func GetFunctionService() *FunctionService {

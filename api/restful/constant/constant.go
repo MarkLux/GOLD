@@ -49,3 +49,9 @@ const (
 	OperatePublish = "PUBLISH"
 	OperateRollBack = "ROLLBACK"
 )
+
+// roles
+const (
+	RoleDev = "DEV"
+	RoleAdmin = "ADMIN"
+)
