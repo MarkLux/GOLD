@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/MarkLux/GOLD/api/restful/constant"
 	"github.com/MarkLux/GOLD/api/restful/docker"
 	"github.com/MarkLux/GOLD/api/restful/errors"
 	"github.com/MarkLux/GOLD/api/restful/k8s"
@@ -51,14 +52,42 @@ func (s FunctionService) PublishFunctionService(action Action) (opId int64, err 
 	f.GitHead = action.TargetVersion
 	f.GitBranch = action.TargetBranch
 	opId = opLog.Id
-	//err = s.buildImage(f, opLog)
-	// check if the service existed ?
-	err = s.initK8sService(f, opLog)
-	if err != nil {
-		log.Println("fail to init k8s service ", err)
-		return
-	}
-	s.opService.FinishOperateLog(opLog)
+	// launch task using a routine.
+	go func() {
+		_ = s.updateStatus(f.Id, constant.ServiceStatusImageBuilding)
+		e := s.buildImage(f, opLog)
+		if e != nil {
+			_ = s.updateStatus(f.Id, constant.ServiceStatusImageBuildFail)
+			log.Println("fail to build image, ", e)
+			return
+		}
+		_ = s.updateStatus(f.Id, constant.ServiceStatusImagePushing)
+		e = s.pushImage(f, opLog)
+		if e != nil {
+			_ = s.updateStatus(f.Id, constant.ServiceStatusImagePushFail)
+			log.Println("fail to push image, ", e)
+			return
+		}
+		_ = s.updateStatus(f.Id, constant.ServiceStatusPublishing)
+		// check if the service published.
+		if f.Published == 0 {
+			e = s.initK8sService(f, opLog)
+			if e != nil {
+				_ = s.updateStatus(f.Id, constant.ServiceStatusPublishFail)
+				log.Println("fail to publish image, ", e)
+				return
+			}
+		} else {
+			e = s.publishK8sService(f, opLog)
+			if e != nil {
+				_ = s.updateStatus(f.Id, constant.ServiceStatusPublishFail)
+				log.Println("fail to publish image, ", e)
+				return
+			}
+		}
+		_ =s.opService.FinishOperateLog(opLog)
+		_ = s.updateStatus(f.Id, constant.ServiceStatusPublished)
+	}()
 	return
 }
 
@@ -71,12 +100,12 @@ func (s FunctionService) ListFunctionService(page int, size int) (total int64, r
 	return
 }
 
-func (s FunctionService) GetFunctionService(id int64) orm.FunctionService {
+func (s FunctionService) GetFunctionService(id int64) *orm.FunctionService {
 	f := &orm.FunctionService{
 		Id: id,
 	}
 	s.engine.Get(f)
-	return *f
+	return f
 }
 
 func GetFunctionService() *FunctionService {

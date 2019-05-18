@@ -65,7 +65,7 @@ func (s OperateLogService) CreateOperateLogService(action Action) (opLog *orm.Op
 	return
 }
 
-func (s OperateLogService) ContinueOperateLog(opLog *orm.OperateLogs, currentAction string, output io.Reader, hasOutput bool) (err error) {
+func (s OperateLogService) ContinueOperateLog(opLog *orm.OperateLogs, currentAction string, output io.Reader, hasOutput bool) (lastOutput string, err error) {
 	// update operate log
 	current := time.Now().Unix()
 	updateLog := &orm.OperateLogs{
@@ -91,8 +91,9 @@ func (s OperateLogService) ContinueOperateLog(opLog *orm.OperateLogs, currentAct
 			log.Println("fail to read from output, ", err)
 			break
 		}
-		log.Println("[output]", string(line))
-		fullOutput += string(line)
+		lastOutput = string(line)
+		log.Println("[output]", lastOutput)
+		fullOutput += lastOutput
 		fullOutput += "\n"
 	}
 	// rewrite into db

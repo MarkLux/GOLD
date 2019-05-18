@@ -51,7 +51,7 @@ func (client *GoldRpcClient) RequestSync(request *common.GoldRequest) (response 
 	response = &common.GoldResponse{
 		Handler:   res.Data.Sender,
 		TimeStamp: res.Data.Timestamp,
-		Data: resMap,
+		Data:      resMap,
 	}
 	return
 }

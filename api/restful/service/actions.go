@@ -7,6 +7,7 @@ import (
 	"github.com/MarkLux/GOLD/api/restful/github"
 	"github.com/MarkLux/GOLD/api/restful/orm"
 	docker "github.com/docker/docker/api/types"
+	"encoding/json"
 	"golang.org/x/net/context"
 	appV1 "k8s.io/api/apps/v1"
 	coreV1 "k8s.io/api/core/v1"
@@ -69,12 +70,15 @@ func (s FunctionService) buildImage(f orm.FunctionService, buildLog *orm.Operate
 		return
 	}
 	defer rsp.Body.Close()
-	err = s.opService.ContinueOperateLog(buildLog, ActionImgBuilding, rsp.Body, true)
+	lastOutput, err := s.opService.ContinueOperateLog(buildLog, ActionImgBuilding, rsp.Body, true)
 	if err != nil {
 		log.Println("fail to record output, ", err)
-		// TODO check if the build succeed? there can be no api, maybe we have to read the output
+		return
 	}
-
+	hasErr, errMsg := parseDockerErr(lastOutput)
+	if hasErr {
+		err = errors.GenSystemError(errMsg)
+	}
 	return
 }
 
@@ -89,12 +93,16 @@ func (s FunctionService) pushImage(f orm.FunctionService, buildLog *orm.OperateL
 		log.Println("fail to push image", err)
 	}
 	defer pRsp.Close()
-	_ = s.opService.ContinueOperateLog(buildLog, ActionImgPushing, pRsp, true)
+	lastOutput, _ := s.opService.ContinueOperateLog(buildLog, ActionImgPushing, pRsp, true)
+	hasErr, errMsg := parseDockerErr(lastOutput)
+	if hasErr {
+		err = errors.GenSystemError(errMsg)
+	}
 	return
 }
 
 func (s FunctionService) initK8sService(f orm.FunctionService, opLog *orm.OperateLogs) (err error) {
-	_ = s.opService.ContinueOperateLog(opLog, ActionPublishing, nil, false)
+	_, _ = s.opService.ContinueOperateLog(opLog, ActionPublishing, nil, false)
 	// prepare
 	img := constant.GoldRegistry + "/" + f.ServiceName + ":" + f.GitHead
 	labelMap := map[string]string{"app": f.ServiceName}
@@ -170,7 +178,7 @@ func (s FunctionService) initK8sService(f orm.FunctionService, opLog *orm.Operat
 }
 
 func (s FunctionService) publishK8sService(f orm.FunctionService, opLog *orm.OperateLogs) (err error) {
-	_ = s.opService.ContinueOperateLog(opLog, ActionPublishing, nil, false)
+	_, _ = s.opService.ContinueOperateLog(opLog, ActionPublishing, nil, false)
 	img := constant.GoldRegistry + "/" + f.ServiceName + ":" + f.GitHead
 	// change the dp image, fire!
 	dp, err := s.k8sCli.AppsV1().Deployments(constant.GoldNameSpace).Get(f.ServiceName, v1.GetOptions{})
@@ -193,4 +201,21 @@ func (s FunctionService) publishK8sService(f orm.FunctionService, opLog *orm.Ope
 func (s FunctionService) updateStatus(fId int64, status string) error {
 	_, err := s.engine.Id(fId).Cols("status").Update(&orm.FunctionService{Status: status})
 	return err
+}
+
+func parseDockerErr(errOutput string) (hasErr bool, errMsg string) {
+	output := make(map[string]interface{})
+	err := json.Unmarshal([]byte(errOutput), &output)
+	if err != nil {
+		hasErr = true
+		errMsg = "fail to parse json, " + err.Error()
+		return
+	}
+	if output["error"] != nil {
+		hasErr = true
+		errMsg = output["error"].(string)
+		return
+	}
+	hasErr = false
+	return
 }

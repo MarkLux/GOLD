@@ -13,7 +13,7 @@ func main() {
 		Name: "marklux",
 	}
 	act := service.Action{
-		FunctionService: f,
+		FunctionService: *f,
 		TargetBranch: "master",
 		TargetVersion: "ef13b23aa54102badb2f3d4b6c10067456645b6f",
 		Operator: u,
