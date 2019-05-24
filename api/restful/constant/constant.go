@@ -12,8 +12,8 @@ const (
 
 	RpcPort = 8080
 
-	KubeConfigPath = "/Users/lumin/.kube/config"
-	DockerfilePath = "/Users/lumin/Projects/Go/GOLD/api/build/tmp.tar"
+	KubeConfigPath = "/Users/hanxiao/.kube/config"
+	DockerfilePath = "/Users/hanxiao/WorkPlace/GOLD/api/build/tmp.tar"
 	DockerRegistry = "marklux.cn:8099"
 	GoldRegistry = "gold-registry:5000"
 	GoldNameSpace = "gold"
