@@ -21,8 +21,13 @@ func main() {
 	functionController := controller.NewFunctionServiceController()
 	r.POST("/function/service", functionController.CreateFunctionService)
 	r.GET("/function/service/list", functionController.ListFunctionService)
+	r.POST("/function/service/publish", functionController.PublishFunctionService)
 
-	r.Run(":8090")
+	// operate log controller
+	operateLogController := controller.NewOperateLogController()
+	r.GET("/operate/log/detail", operateLogController.GetLogDetail)
+
+	r.Run(":8094")
 }
 
 // handle cors middleware

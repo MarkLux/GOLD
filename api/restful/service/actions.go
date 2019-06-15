@@ -41,6 +41,7 @@ func (s FunctionService) buildImage(f orm.FunctionService, buildLog *orm.Operate
 	// build args
 	bArgs := make(map[string]*string)
 	gitUrl := fmt.Sprintf("https://github.com/%s/%s", f.GitMaintainer, f.GitRepo)
+	log.Println(gitUrl)
 	bArgs["REPO_URL"] = &gitUrl
 	bArgs["REPO_NAME"] = &f.GitRepo
 	bArgs["BRANCH"] = &f.GitBranch
@@ -200,6 +201,11 @@ func (s FunctionService) publishK8sService(f orm.FunctionService, opLog *orm.Ope
 
 func (s FunctionService) updateStatus(fId int64, status string) error {
 	_, err := s.engine.Id(fId).Cols("status").Update(&orm.FunctionService{Status: status})
+	return err
+}
+
+func (s FunctionService) finishStatus(fId int64, status string, head string) error {
+	_, err := s.engine.Id(fId).Cols("status", "git_head").Update(&orm.FunctionService{Status: status, GitHead: head})
 	return err
 }
 

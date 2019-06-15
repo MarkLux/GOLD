@@ -86,7 +86,7 @@ func (s FunctionService) PublishFunctionService(action Action) (opId int64, err 
 			}
 		}
 		_ =s.opService.FinishOperateLog(opLog)
-		_ = s.updateStatus(f.Id, constant.ServiceStatusPublished)
+		_ = s.finishStatus(f.Id, constant.ServiceStatusPublished, f.GitHead)
 	}()
 	return
 }

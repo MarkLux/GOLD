@@ -26,6 +26,12 @@ type PublishFunctionServiceRequest struct {
 	TargetVersion string `json:"targetVersion" binding:"required"`
 }
 
+type PreviewFunctionServiceRequest struct {
+	FunctionId int64 `json:"functionId" binding:"required"`
+	TargetBranch string `json:"targetBranch" binding:"required"`
+	TargetVersion string `json:"targetVersion" binding:"required"`
+}
+
 type FunctionServiceController struct {
 	functionService *service.FunctionService
 	tokenService    *service.TokenService
@@ -55,6 +61,7 @@ func (c FunctionServiceController) CreateFunctionService(ctx *gin.Context) {
 		GitHead:       req.GitHead,
 		MinInstance:   req.MinInstance,
 		MaxInstance:   req.MaxInstance,
+		Status:        constant.ServiceStatusCreated,
 	}
 	err = c.functionService.CreateFunctionService(&f)
 	if err != nil {

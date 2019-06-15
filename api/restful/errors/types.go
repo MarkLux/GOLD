@@ -59,3 +59,9 @@ func GenFunctionServiceExistedError() RestError {
 func GenFunctionNotFoundError() RestError {
 	return RestError{3002, "指定服务不存在"}
 }
+
+// operate-log relatd
+
+func GenOperateLogNotFoundError() RestError {
+	return RestError{4001, "操作日志不存在"}
+}
